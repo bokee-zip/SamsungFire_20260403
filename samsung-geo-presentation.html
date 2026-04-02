@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>삼성화재 GEO 도입 전략 제안</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Pretendard:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --samsung-blue: #1428A0;
+      --samsung-blue-light: #4169E1;
+      --accent-coral: #FF6B4A;
+      --accent-teal: #00B8A9;
+      --accent-amber: #F5A623;
+      --bg-dark: #0A0E1A;
+      --bg-dark-secondary: #141B2D;
+      --bg-light: #F8F9FC;
+      --text-primary: #FFFFFF;
+      --text-secondary: rgba(255,255,255,0.7);
+      --text-muted: rgba(255,255,255,0.5);
+      --text-dark: #1A1A2E;
+      --border-subtle: rgba(255,255,255,0.1);
+      --gradient-primary: linear-gradient(135deg, #1428A0 0%, #4169E1 100%);
+      --gradient-dark: linear-gradient(180deg, #0A0E1A 0%, #141B2D 100%);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Pretendard', 'Noto Sans KR', -apple-system, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      background: rgba(10, 14, 26, 0.95);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid var(--border-subtle);
+      padding: 2rem 0;
+      z-index: 1000;
+      transform: translateX(-240px);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    nav:hover {
+      transform: translateX(0);
+    }
+
+    nav::after {
+      content: "◀";
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      color: var(--text-muted);
+      transition: opacity 0.3s;
+    }
+
+    nav:hover::after {
+      opacity: 0;
+    }
+
+    .nav-header {
+      padding: 0 1.5rem 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 1rem;
+    }
+
+    .nav-header span {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-coral);
+      font-weight: 600;
+    }
+
+    .nav-item {
+      display: block;
+      padding: 0.75rem 1.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s;
+      border-left: 3px solid transparent;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      color: var(--text-primary);
+      background: rgba(255,255,255,0.05);
+      border-left-color: var(--accent-coral);
+    }
+
+    .nav-item.part-header {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-top: 1rem;
+      pointer-events: none;
+    }
+
+    .nav-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 1.5rem;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Main Content */
+    main {
+      margin-left: 40px;
+    }
+
+    section {
+      min-height: 100vh;
+      padding: 5rem 4rem;
+      position: relative;
+    }
+
+    /* Hero Section */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: var(--gradient-dark);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at center, rgba(20, 40, 160, 0.15) 0%, transparent 60%);
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(255, 107, 74, 0.1);
+      border: 1px solid rgba(255, 107, 74, 0.3);
+      border-radius: 50px;
+      font-size: 13px;
+      color: var(--accent-coral);
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 .highlight {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin-bottom: 3rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-date {
+      font-size: 14px;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Overview Section */
+    .overview {
+      background: var(--bg-dark-secondary);
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-teal);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .section-desc {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin-bottom: 3rem;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .overview-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+
+    .overview-card:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: var(--accent-coral);
+      transform: translateY(-4px);
+    }
+
+    .overview-card .part-num {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent-coral);
+      margin-bottom: 0.75rem;
+    }
+
+    .overview-card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .overview-card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Part Title Section */
+    .part-intro {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 80vh;
+      background: var(--bg-dark);
+    }
+
+    .part-intro .part-badge {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent-coral);
+      margin-bottom: 1rem;
+      letter-spacing: 1px;
+    }
+
+    .part-intro h2 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+
+    .part-intro h2 span {
+      display: block;
+    }
+
+    .part-intro .desc {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+    }
+
+    /* Content Section */
+    .content-section {
+      background: var(--bg-dark-secondary);
+      padding: 6rem 4rem;
+    }
+
+    .content-section.alt {
+      background: var(--bg-dark);
+    }
+
+    /* Comparison Grid */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .comparison-card {
+      padding: 2.5rem;
+      border-radius: 20px;
+      position: relative;
+    }
+
+    .comparison-card.old {
+      background: rgba(255, 107, 74, 0.08);
+      border: 1px solid rgba(255, 107, 74, 0.2);
+    }
+
+    .comparison-card.new {
+      background: rgba(0, 184, 169, 0.08);
+      border: 1px solid rgba(0, 184, 169, 0.2);
+    }
+
+    .comparison-card .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .comparison-card.old .tag { color: var(--accent-coral); }
+    .comparison-card.new .tag { color: var(--accent-teal); }
+
+    .comparison-card h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    .comparison-card ul {
+      list-style: none;
+    }
+
+    .comparison-card li {
+      padding: 0.75rem 0;
+      font-size: 15px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .comparison-card li:last-child {
+      border-bottom: none;
+    }
+
+    .comparison-card li::before {
+      content: "→";
+      color: var(--text-muted);
+    }
+
+    /* Department Cards */
+    .dept-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .dept-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+
+    .dept-card:hover {
+      border-color: var(--samsung-blue-light);
+    }
+
+    .dept-card.featured {
+      background: linear-gradient(135deg, rgba(20, 40, 160, 0.15) 0%, rgba(65, 105, 225, 0.1) 100%);
+      border-color: var(--samsung-blue-light);
+    }
+
+    .dept-card .dept-name {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .dept-card .dept-name .badge {
+      font-size: 10px;
+      padding: 3px 8px;
+      background: var(--accent-coral);
+      color: white;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .dept-card .current {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      padding-left: 1rem;
+      border-left: 2px solid var(--border-subtle);
+    }
+
+    .dept-card .change {
+      font-size: 14px;
+      color: var(--accent-teal);
+      line-height: 1.7;
+    }
+
+    /* Stats Row */
+    .stats-row {
+      display: flex;
+      gap: 3rem;
+      margin-top: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-item .number {
+      font-size: 3rem;
+      font-weight: 800;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-item .label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    /* Solution Box */
+    .solution-box {
+      background: rgba(0, 184, 169, 0.08);
+      border: 1px solid rgba(0, 184, 169, 0.2);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-top: 2rem;
+    }
+
+    .solution-box h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent-teal);
+      margin-bottom: 1rem;
+    }
+
+    .solution-box ul {
+      list-style: none;
+    }
+
+    .solution-box li {
+      padding: 0.5rem 0;
+      font-size: 15px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .solution-box li::before {
+      content: "✓";
+      color: var(--accent-teal);
+      font-weight: bold;
+    }
+
+    /* Problem Box */
+    .problem-box {
+      background: rgba(255, 107, 74, 0.08);
+      border: 1px solid rgba(255, 107, 74, 0.2);
+      border-radius: 16px;
+      padding: 2.5rem;
+    }
+
+    .problem-box h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent-coral);
+      margin-bottom: 1rem;
+    }
+
+    .problem-box ul {
+      list-style: none;
+    }
+
+    .problem-box li {
+      padding: 0.5rem 0;
+      font-size: 15px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .problem-box li::before {
+      content: "⚠";
+      color: var(--accent-coral);
+    }
+
+    /* Roadmap */
+    .roadmap {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .roadmap-phase {
+      flex: 1;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .roadmap-phase::after {
+      content: "→";
+      position: absolute;
+      right: -20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.5rem;
+      color: var(--text-muted);
+    }
+
+    .roadmap-phase:last-child::after {
+      display: none;
+    }
+
+    .roadmap-phase .phase-num {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+      background: var(--gradient-primary);
+      border-radius: 50%;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .roadmap-phase h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .roadmap-phase .duration {
+      font-size: 13px;
+      color: var(--accent-teal);
+    }
+
+    /* Role List */
+    .role-list {
+      margin-top: 2rem;
+    }
+
+    .role-item {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border-subtle);
+      align-items: flex-start;
+    }
+
+    .role-item:last-child {
+      border-bottom: none;
+    }
+
+    .role-num {
+      width: 40px;
+      height: 40px;
+      background: var(--gradient-primary);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .role-content h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .role-content p {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Quote Section */
+    .quote-section {
+      background: var(--bg-dark);
+      text-align: center;
+      padding: 8rem 4rem;
+    }
+
+    .quote-section blockquote {
+      font-size: clamp(1.25rem, 3vw, 2rem);
+      font-weight: 500;
+      line-height: 1.6;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .quote-section blockquote .highlight {
+      color: var(--accent-teal);
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: var(--gradient-primary);
+      text-align: center;
+      padding: 6rem 4rem;
+    }
+
+    .cta-section h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2rem;
+      background: white;
+      color: var(--samsung-blue);
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .cta-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg-dark);
+      padding: 3rem 4rem;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    footer p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-in {
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      nav {
+        transform: translateX(-280px);
+      }
+      nav:hover {
+        transform: translateX(-280px);
+      }
+      main {
+        margin-left: 0;
+      }
+      section {
+        padding: 4rem 2rem;
+      }
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+      .roadmap {
+        flex-direction: column;
+      }
+      .roadmap-phase::after {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-header">
+      <span>Pages</span>
+    </div>
+    <a href="#hero" class="nav-item active">Cover</a>
+    <a href="#overview" class="nav-item">Overview</a>
+    <span class="nav-item part-header">Part 1</span>
+    <a href="#why-geo" class="nav-item">왜 지금 GEO인가?</a>
+    <span class="nav-item part-header">Part 2</span>
+    <a href="#paradigm" class="nav-item">SEO → GEO 전환</a>
+    <span class="nav-item part-header">Part 3</span>
+    <a href="#departments" class="nav-item">부서별 역할 변화</a>
+    <span class="nav-item part-header">Part 4</span>
+    <a href="#monimo" class="nav-item">모니모앱 연계 방안</a>
+    <span class="nav-item part-header">Part 5</span>
+    <a href="#control-tower" class="nav-item">기획실의 역할</a>
+    <span class="nav-item part-header">Part 6</span>
+    <a href="#next-steps" class="nav-item">다음 단계</a>
+    <div class="nav-hint">Hover to reveal menu</div>
+  </nav>
+
+  <main>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+      <div class="hero-badge">
+        삼성화재 기획실 × GEO 컨설팅
+      </div>
+      <h1>
+        AI 시대,<br>
+        <span class="highlight">검색의 규칙이 바뀌다</span>
+      </h1>
+      <p class="hero-subtitle">
+        GEO(Generative Engine Optimization) 도입을 통한<br>
+        삼성화재 디지털 마케팅 전략 제안
+      </p>
+      <p class="hero-date">2026. 04. 04.</p>
+    </section>
+
+    <!-- Overview Section -->
+    <section id="overview" class="overview">
+      <span class="section-label">Overview</span>
+      <h2 class="section-title">오늘 논의할 내용</h2>
+      <p class="section-desc">
+        AI 검색 시대의 새로운 마케팅 패러다임과,<br>
+        삼성화재 각 부서가 준비해야 할 변화를 제안합니다.
+      </p>
+      <div class="overview-grid">
+        <a href="#why-geo" class="overview-card">
+          <div class="part-num">Part 1</div>
+          <h3>왜 지금 GEO인가?</h3>
+          <p>AI 검색의 급부상과 삼성화재의 현재 위치를 진단합니다.</p>
+        </a>
+        <a href="#paradigm" class="overview-card">
+          <div class="part-num">Part 2</div>
+          <h3>SEO → GEO 패러다임 전환</h3>
+          <p>기존 SEO와 새로운 GEO의 핵심 차이점을 비교합니다.</p>
+        </a>
+        <a href="#departments" class="overview-card">
+          <div class="part-num">Part 3</div>
+          <h3>부서별 역할 변화</h3>
+          <p>각 파트가 GEO 도입 시 어떻게 변화해야 하는지 구체적으로 제안합니다.</p>
+        </a>
+        <a href="#monimo" class="overview-card">
+          <div class="part-num">Part 4</div>
+          <h3>모니모앱 연계 방안</h3>
+          <p>앱 전용 환경에서의 GEO 적용 전략을 제시합니다.</p>
+        </a>
+        <a href="#control-tower" class="overview-card">
+          <div class="part-num">Part 5</div>
+          <h3>기획실의 역할</h3>
+          <p>전사 GEO 추진을 위한 기획실 컨트롤타워 역할을 정의합니다.</p>
+        </a>
+        <a href="#next-steps" class="overview-card">
+          <div class="part-num">Part 6</div>
+          <h3>다음 단계</h3>
+          <p>구체적인 실행 로드맵과 파일럿 프로젝트를 제안합니다.</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- Part 1: Why GEO Now -->
+    <section id="why-geo" class="part-intro">
+      <span class="part-badge">Part. 1</span>
+      <h2>
+        <span>왜 지금</span>
+        <span>GEO인가?</span>
+      </h2>
+      <p class="desc">
+        고객이 검색하는 방식이 바뀌었습니다.<br>
+        AI에게 물어보는 시대, 삼성화재는 AI의 답변에 나오고 있습니까?
+      </p>
+    </section>
+
+    <section class="content-section">
+      <span class="section-label">Market Shift</span>
+      <h2 class="section-title">AI 검색의 폭발적 성장</h2>
+      <p class="section-desc">
+        "자동차보험 어디가 좋아?"라는 질문,<br>
+        이제 구글이 아니라 ChatGPT에 먼저 물어봅니다.
+      </p>
+      
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="number">3억+</div>
+          <div class="label">ChatGPT 월간 사용자</div>
+        </div>
+        <div class="stat-item">
+          <div class="number">1,200만+</div>
+          <div class="label">한국 사용자 (추정)</div>
+        </div>
+        <div class="stat-item">
+          <div class="number">40%</div>
+          <div class="label">Z세대 AI 검색 선호율</div>
+        </div>
+      </div>
+
+      <div class="problem-box" style="margin-top: 3rem;">
+        <h4>⚠️ 현재 문제</h4>
+        <ul>
+          <li>AI에게 "자동차보험 추천해줘" 물으면 삼성화재가 언급되는가?</li>
+          <li>언급되더라도, 경쟁사 대비 충분히 노출되고 있는가?</li>
+          <li>AI가 참조하는 정보원이 삼성화재 공식 콘텐츠인가?</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Part 2: Paradigm Shift -->
+    <section id="paradigm" class="part-intro alt">
+      <span class="part-badge">Part. 2</span>
+      <h2>
+        <span>SEO에서 GEO로</span>
+        <span>패러다임 전환</span>
+      </h2>
+      <p class="desc">
+        검색 최적화의 규칙이 바뀌었습니다.<br>
+        키워드 순위가 아니라, AI가 '신뢰하는 정보원'이 되는 것이 중요합니다.
+      </p>
+    </section>
+
+    <section class="content-section alt">
+      <span class="section-label">Paradigm</span>
+      <h2 class="section-title">SEO vs GEO 핵심 비교</h2>
+      <p class="section-desc">
+        삼성화재는 SEO에서는 이미 잘하고 계십니다.<br>
+        문제는 AI가 삼성화재 공식 콘텐츠를 인용하지 않는다는 점입니다.
+      </p>
+
+      <div class="comparison-grid">
+        <div class="comparison-card old">
+          <div class="tag">🔴 SEO (기존)</div>
+          <h3>검색 순위 경쟁</h3>
+          <ul>
+            <li>구글/네이버 검색 순위 경쟁</li>
+            <li>키워드 밀도, 백링크 수 최적화</li>
+            <li>클릭 유도형 제목 작성</li>
+            <li>페이지뷰 = 성과</li>
+            <li>사람이 읽는 콘텐츠</li>
+          </ul>
+        </div>
+        <div class="comparison-card new">
+          <div class="tag">🟢 GEO (신규)</div>
+          <h3>AI 인용원 경쟁</h3>
+          <ul>
+            <li>AI 답변 인용원 경쟁</li>
+            <li>정보 정확성, 신뢰성 최적화</li>
+            <li>구조화된 데이터 제공</li>
+            <li>AI 인용 = 성과</li>
+            <li>AI가 해석하는 콘텐츠</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 3: Department Changes -->
+    <section id="departments" class="part-intro">
+      <span class="part-badge">Part. 3</span>
+      <h2>
+        <span>부서별</span>
+        <span>역할 변화</span>
+      </h2>
+      <p class="desc">
+        GEO는 한 부서만의 일이 아닙니다.<br>
+        각 파트가 어떻게 변해야 하는지 구체적으로 보여드리겠습니다.
+      </p>
+    </section>
+
+    <section class="content-section">
+      <span class="section-label">Role Changes</span>
+      <h2 class="section-title">파트별 구체적 변화</h2>
+      <p class="section-desc">
+        현재 역할에서 GEO 시대에 맞는 새로운 역할로의 전환을 제안합니다.
+      </p>
+
+      <div class="dept-grid">
+        <div class="dept-card">
+          <div class="dept-name">콘텐츠기획파트 + 브랜드전략파트</div>
+          <div class="current">현재: 블로그/SNS 콘텐츠 발행</div>
+          <div class="change">
+            → AI가 인용할 수 있는 구조화된 FAQ, 용어집, 비교표 제작.<br>
+            콘텐츠 형식을 "읽히는 글"에서 "인용되는 데이터"로 전환
+          </div>
+        </div>
+
+        <div class="dept-card">
+          <div class="dept-name">홈페이지운영파트</div>
+          <div class="current">현재: 상품정보 페이지 운영</div>
+          <div class="change">
+            → Schema.org 구조화 데이터 적용, FAQ 마크업, 상품별 비교 데이터 API화.<br>
+            모니모앱과 콘텐츠 동기화 체계 구축
+          </div>
+        </div>
+
+        <div class="dept-card featured">
+          <div class="dept-name">
+            장기다이렉트영업부
+            <span class="badge">★ 핵심</span>
+          </div>
+          <div class="current">현재: 광고 기반 유입</div>
+          <div class="change">
+            → "운전자보험 비교" "사고 시 보상" 등 AI 질문에 최적화된 랜딩페이지 제작.<br>
+            실제 보상 사례 데이터베이스 공개로 Perplexity/ChatGPT 검색 시 1순위 인용 목표
+          </div>
+        </div>
+
+        <div class="dept-card">
+          <div class="dept-name">자동차상품파트 + 장기상품파트</div>
+          <div class="current">현재: 상품 개발 및 내부 마케팅 지원</div>
+          <div class="change">
+            → 상품별 차별점을 AI가 이해할 수 있는 형태(JSON-LD, 비교표)로 정리.<br>
+            "왜 삼성화재인가?"에 대한 명확한 데이터 제공
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 4: Monimo App -->
+    <section id="monimo" class="part-intro alt">
+      <span class="part-badge">Part. 4</span>
+      <h2>
+        <span>모니모앱</span>
+        <span>연계 방안</span>
+      </h2>
+      <p class="desc">
+        "앱 전용 환경에서도 GEO가 가능한가?"<br>
+        가능합니다. 방법이 다를 뿐입니다.
+      </p>
+    </section>
+
+    <section class="content-section alt">
+      <span class="section-label">App Strategy</span>
+      <h2 class="section-title">모니모앱의 한계와 해결책</h2>
+      <p class="section-desc">
+        대표 홈페이지 역할 축소가 오히려 기회입니다.<br>
+        홈페이지를 '가입 채널'에서 'AI 인용원'으로 재정의하면 새로운 트래픽 경로가 열립니다.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem;">
+        <div class="problem-box">
+          <h4>⚠️ 앱의 한계</h4>
+          <ul>
+            <li>AI가 앱 내부 콘텐츠 크롤링 불가</li>
+            <li>모바일웹/PC 버전 없음</li>
+            <li>외부 검색 노출 어려움</li>
+          </ul>
+        </div>
+        <div class="solution-box">
+          <h4>✅ 해결 방안</h4>
+          <ul>
+            <li>대표 홈페이지를 "GEO 허브"로 전환</li>
+            <li>앱 딥링크 연결 (정보→앱으로 유도)</li>
+            <li>상품 정보 API 공개 검토</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="background: rgba(65, 105, 225, 0.1); border: 1px solid rgba(65, 105, 225, 0.3); border-radius: 16px; padding: 2rem; margin-top: 3rem;">
+        <h4 style="color: var(--samsung-blue-light); margin-bottom: 1rem;">💡 제안 전략</h4>
+        <p style="font-size: 15px; line-height: 1.8; color: var(--text-secondary);">
+          "대표 홈페이지 역할 축소가 오히려 기회입니다.<br>
+          홈페이지를 <strong style="color: var(--text-primary);">'가입 채널'에서 'AI 인용원'으로 재정의</strong>하면,<br>
+          모니모앱으로의 트래픽 유입 경로가 새롭게 열립니다."
+        </p>
+      </div>
+    </section>
+
+    <!-- Part 5: Control Tower -->
+    <section id="control-tower" class="part-intro">
+      <span class="part-badge">Part. 5</span>
+      <h2>
+        <span>기획실의 역할</span>
+        <span>컨트롤타워</span>
+      </h2>
+      <p class="desc">
+        GEO는 여러 부서가 걸린 전사 이슈입니다.<br>
+        기획실이 컨트롤타워가 되어야 일관된 전략 실행이 가능합니다.
+      </p>
+    </section>
+
+    <section class="content-section">
+      <span class="section-label">Governance</span>
+      <h2 class="section-title">기획실 역할 3가지</h2>
+      <p class="section-desc">
+        전사 GEO 추진을 위한 기획실의 핵심 역할을 정의합니다.
+      </p>
+
+      <div class="role-list">
+        <div class="role-item">
+          <div class="role-num">01</div>
+          <div class="role-content">
+            <h4>전사 GEO 가이드라인 수립</h4>
+            <p>콘텐츠 작성 표준, 구조화 데이터 규격, 성과 측정 KPI 정의</p>
+          </div>
+        </div>
+        <div class="role-item">
+          <div class="role-num">02</div>
+          <div class="role-content">
+            <h4>부서 간 조율</h4>
+            <p>콘텐츠파트-홈페이지파트-상품파트 협업 체계 구축</p>
+          </div>
+        </div>
+        <div class="role-item">
+          <div class="role-num">03</div>
+          <div class="role-content">
+            <h4>성과 모니터링</h4>
+            <p>AI 검색 노출 현황 주기적 점검, 경쟁사 대비 분석</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 6: Next Steps -->
+    <section id="next-steps" class="part-intro alt">
+      <span class="part-badge">Part. 6</span>
+      <h2>
+        <span>다음 단계</span>
+      </h2>
+      <p class="desc">
+        오늘은 개념과 방향성 위주로 말씀드렸습니다.<br>
+        다음 미팅에서는 더 구체적인 실행 계획을 논의하면 어떨까요?
+      </p>
+    </section>
+
+    <section class="content-section alt">
+      <span class="section-label">Roadmap</span>
+      <h2 class="section-title">제안 로드맵</h2>
+      <p class="section-desc">
+        단계별 접근으로 리스크를 최소화하면서 빠르게 성과를 확인합니다.
+      </p>
+
+      <div class="roadmap">
+        <div class="roadmap-phase">
+          <div class="phase-num">1</div>
+          <h4>현황 진단</h4>
+          <div class="duration">2주</div>
+        </div>
+        <div class="roadmap-phase">
+          <div class="phase-num">2</div>
+          <h4>파일럿 적용</h4>
+          <div class="duration">4주</div>
+        </div>
+        <div class="roadmap-phase">
+          <div class="phase-num">3</div>
+          <h4>전사 확대</h4>
+          <div class="duration">8주+</div>
+        </div>
+      </div>
+
+      <div style="background: rgba(0, 184, 169, 0.1); border: 1px solid rgba(0, 184, 169, 0.3); border-radius: 16px; padding: 2.5rem; margin-top: 3rem;">
+        <h4 style="color: var(--accent-teal); margin-bottom: 1rem; font-size: 1.2rem;">🎯 다음 미팅 제안</h4>
+        <p style="font-size: 16px; line-height: 1.8; color: var(--text-secondary);">
+          "다음 미팅에서는 <strong style="color: var(--text-primary);">장기다이렉트영업부</strong>와 함께<br>
+          <strong style="color: var(--accent-teal);">운전자보험 GEO 파일럿</strong>을 구체적으로 논의하면 어떨까요?"
+        </p>
+      </div>
+    </section>
+
+    <!-- Quote Section -->
+    <section class="quote-section">
+      <blockquote>
+        "고객이 <span class="highlight">AI에게 물어볼 때</span>,<br>
+        삼성화재가 <span class="highlight">첫 번째 답</span>이 되어야 합니다."
+      </blockquote>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <h2>감사합니다</h2>
+      <p>Thank You</p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>Copyright 2026 © GEO Consulting. ALL RIGHTS RESERVED</p>
+    </footer>
+
+  </main>
+
+  <script>
+    // Smooth scroll for navigation
+    document.querySelectorAll('.nav-item[href^="#"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Active nav item on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navItems = document.querySelectorAll('.nav-item[href^="#"]');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (scrollY >= sectionTop - 200) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('href') === '#' + current) {
+          item.classList.add('active');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
