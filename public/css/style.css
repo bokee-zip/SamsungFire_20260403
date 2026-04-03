@@ -57,7 +57,9 @@ body {
   font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
   background: var(--white);
   color: var(--charcoal-gray);
-  line-height: 1.6;
+  line-height: 1.65;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
   overflow-x: hidden;
 }
 
@@ -100,21 +102,23 @@ section {
 .display-text {
   font-size: var(--font-display-size);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
   color: var(--dark-navy);
 }
 
 .h1-text {
   font-size: var(--font-h1-size);
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.35;
+  letter-spacing: -0.025em;
   color: var(--dark-navy);
 }
 
 .h2-text {
   font-size: var(--font-h2-size);
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1.45;
   color: var(--charcoal-gray);
 }
 
@@ -128,7 +132,7 @@ section {
 .body-large {
   font-size: var(--font-body-large);
   font-weight: 500;
-  line-height: 1.6;
+  line-height: 1.7;
   color: var(--charcoal-gray);
 }
 
