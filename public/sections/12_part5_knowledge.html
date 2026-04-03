@@ -1,78 +1,47 @@
 <!-- Content Slide Part 5 -->
 <section id="knowledge-graph" class="bg-white">
-  <div class="container" style="max-height: 100%; overflow-y: hidden; display: flex; flex-direction: column;">
-    <div class="mb-xs animate-in flex-shrink-0 text-center">
-      <h2 class="h1-text mb-xs" style="font-size: 32px;">TO-BE — 부서별 지식그래프 목표 설계</h2>
+  <div class="container">
+    <div class="mb-l animate-in">
+      <span class="badge sub mb-xs">Knowledge Architecture</span>
+      <h2 class="h1-text mb-s">부서별 지식그래프 설계</h2>
+      <p class="body-large">
+        AI가 삼성화재의 정보를 정확하게 이해하고 인용할 수 있도록, 모든 콘텐츠와 데이터를 연결된 구조로 체계화합니다.<br>
+        각 부서가 담당하는 영역의 지식을 명확히 정의하고, 공통 영역은 협업 구조로 관리합니다.
+      </p>
     </div>
 
-    <!-- Table Layout -->
-    <div class="card animate-in mb-s" style="border: 1.5px solid var(--light-gray); padding: 0; overflow: hidden; border-radius: 16px; flex-shrink: 0; max-width: 1200px; margin: 0 auto; width: 100%;">
-      <table style="width: 100%; border-collapse: collapse; text-align: left;">
-        <thead style="background: var(--light-blue); border-bottom: 2px solid var(--samsung-blue);">
-          <tr>
-            <th style="padding: 12px 24px; font-weight: 600; color: var(--dark-navy);">부서</th>
-            <th style="padding: 12px 24px; font-weight: 600; color: var(--dark-navy);">담당 노드</th>
-            <th style="padding: 12px 24px; font-weight: 600; color: var(--dark-navy);">구축 목표</th>
-            <th style="padding: 12px 24px; font-weight: 600; color: var(--dark-navy);">인텐트</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style="border-bottom: 2px solid var(--samsung-blue); background: var(--soft-mint);">
-            <td style="padding: 12px 24px; font-weight: 700; font-size: 15px; color: var(--samsung-blue);">기획실</td>
-            <td style="padding: 12px 24px; font-weight: 700; font-size: 15px; color: var(--samsung-blue);">전사 관리</td>
-            <td style="padding: 12px 24px; font-size: 15px; font-weight: 600;">KPI 설정·부서 컨펌·통합 레포트·경영진 보고</td>
-            <td style="padding: 12px 24px; font-size: 15px; font-weight: 600; color: var(--samsung-blue);">전체 총괄</td>
-          </tr>
-          <tr style="border-bottom: 1px solid var(--bg-gray);">
-            <td style="padding: 12px 24px; font-weight: 600; font-size: 14px;">브랜드전략파트</td>
-            <td style="padding: 12px 24px; font-size: 14px; font-weight: 600;">신뢰 노드</td>
-            <td style="padding: 12px 24px; font-size: 14px;">Organization Schema · 뉴스룸 Article Schema · 외부 권위 인용 확대</td>
-            <td style="padding: 12px 24px; font-size: 14px; color: var(--medium-gray);">신뢰확인</td>
-          </tr>
-          <tr style="border-bottom: 1px solid var(--bg-gray);">
-            <td style="padding: 12px 24px; font-weight: 600; font-size: 14px;">콘텐츠기획파트</td>
-            <td style="padding: 12px 24px; font-size: 14px; font-weight: 600;">정보 노드</td>
-            <td style="padding: 12px 24px; font-size: 14px;">보험 용어 정의 · FAQPage Schema · 비교 콘텐츠</td>
-            <td style="padding: 12px 24px; font-size: 14px; color: var(--medium-gray);">정보탐색 · 비교</td>
-          </tr>
-          <tr style="border-bottom: 1px solid var(--bg-gray);">
-            <td style="padding: 12px 24px; font-weight: 600; font-size: 14px;">홈페이지운영파트</td>
-            <td style="padding: 12px 24px; font-size: 14px; font-weight: 600;">기술 노드</td>
-            <td style="padding: 12px 24px; font-size: 14px;">Schema 전면 적용 · llms.txt · AI 크롤러 허용 · 모니모 미러링 레이어</td>
-            <td style="padding: 12px 24px; font-size: 14px; color: var(--medium-gray);">정보탐색 · 가입</td>
-          </tr>
-          <tr style="border-bottom: 1px solid var(--bg-gray);">
-            <td style="padding: 12px 24px; font-weight: 600; font-size: 14px;">장기 다이렉트영업부</td>
-            <td style="padding: 12px 24px; font-size: 14px; font-weight: 600;">운전자보험 노드</td>
-            <td style="padding: 12px 24px; font-size: 14px;">정의 페이지 · 연령대별 보험료 테이블 · 비탑승 설명 · 경쟁사 비교표</td>
-            <td style="padding: 12px 24px; font-size: 14px; color: var(--medium-gray);">추천 · 가격 · 비교</td>
-          </tr>
-          <tr style="border-bottom: 1px solid var(--bg-gray);">
-            <td style="padding: 12px 24px; font-weight: 600; font-size: 14px;">자동차 다이렉트영업부</td>
-            <td style="padding: 12px 24px; font-size: 14px; font-weight: 600;">자동차보험 노드</td>
-            <td style="padding: 12px 24px; font-size: 14px;">보장 JSON-LD · 다이렉트 vs 설계사 비교 · GEO 랜딩 재설계</td>
-            <td style="padding: 12px 24px; font-size: 14px; color: var(--medium-gray);">비교 · 가격 · 가입</td>
-          </tr>
-          <tr>
-            <td style="padding: 12px 24px; font-weight: 600; font-size: 14px;">RC파트</td>
-            <td style="padding: 12px 24px; font-size: 14px; font-weight: 600;">전환 노드</td>
-            <td style="padding: 12px 24px; font-size: 14px;">AI 질문 패턴 → 상담 활용 · GEO 콘텐츠 영업 자료 연계</td>
-            <td style="padding: 12px 24px; font-size: 14px; color: var(--medium-gray);">가입/전환</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="grid-2 mb-l animate-in">
+      <div class="card" style="padding: 24px;">
+        <h4 class="h3-text mb-xs">홈페이지운영파트</h4>
+        <p class="body-regular" style="color: var(--samsung-blue); font-weight: 500;">전사 상품/서비스 정보 허브</p>
+      </div>
+      <div class="card" style="padding: 24px;">
+        <h4 class="h3-text mb-xs">콘텐츠기획파트</h4>
+        <p class="body-regular" style="color: var(--samsung-blue); font-weight: 500;">FAQ/용어집/비교 콘텐츠</p>
+      </div>
+      <div class="card" style="padding: 24px;">
+        <h4 class="h3-text mb-xs">자동차다이렉트영업부</h4>
+        <p class="body-regular" style="color: var(--samsung-blue); font-weight: 500;">자동차보험 비교/추천 인텐트</p>
+      </div>
+      <div class="card" style="padding: 24px;">
+        <h4 class="h3-text mb-xs">장기다이렉트영업부</h4>
+        <p class="body-regular" style="color: var(--samsung-blue); font-weight: 500;">운전자/건강보험 인텐트</p>
+      </div>
+      <div class="card" style="padding: 24px;">
+        <h4 class="h3-text mb-xs">상품파트</h4>
+        <p class="body-regular" style="color: var(--samsung-blue); font-weight: 500;">상품별 차별점 데이터</p>
+      </div>
+      <div class="card" style="padding: 24px;">
+        <h4 class="h3-text mb-xs">브랜드전략파트</h4>
+        <p class="body-regular" style="color: var(--samsung-blue); font-weight: 500;">브랜드 보이스/메시지</p>
+      </div>
     </div>
 
-    <!-- Recommendation Intent Box -->
-    <div class="card animate-in flex-shrink-0" style="border: 2px solid var(--samsung-blue); padding: 24px; border-radius: 16px; background: rgba(0, 104, 255, 0.03); max-width: 1200px; margin: 0 auto; width: 100%;">
-      <h3 class="h3-text mb-xs" style="color: var(--samsung-blue); font-size: 18px;">추천 인텐트는 공동 관리</h3>
-      <ul style="list-style: none; padding-left: 0; margin-bottom: 0;">
-        <li class="body-regular mb-xs" style="font-size: 15px; color: var(--dark-navy);">• "운전자보험 추천해줘"는 단일 부서가 담당할 수 없습니다</li>
-        <li class="body-regular mb-xs" style="font-size: 15px; color: var(--dark-navy);">• 상품 데이터(장기다이렉트) + 정보 구조(콘텐츠기획) + 신뢰 근거(브랜드전략) + 기술 접근성(홈페이지운영)</li>
-        <li class="body-regular mb-xs" style="font-size: 15px; color: var(--samsung-blue); font-weight: 600;">• 이 네 부서의 노드가 함께 완성되어야 AI가 삼성화재를 인용합니다</li>
-        <li class="body-regular" style="font-size: 15px; color: var(--dark-navy);">• 기획실이 이 공동 인텐트의 완성도를 관리합니다</li>
-      </ul>
+    <div class="card text-center animate-in" style="background: var(--bg-gray); border: none;">
+      <p class="body-large">
+        <strong style="color: var(--samsung-blue);">추천 인텐트 공동 관리 구조:</strong><br>
+        "자동차보험 추천", "건강보험 비교" 등 핵심 인텐트는<br>기획실 조율 하에 관련 부서가 공동으로 관리합니다.
+      </p>
     </div>
-
   </div>
 </section>

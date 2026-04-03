@@ -1,0 +1,1986 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>삼성화재 GEO 모니터링</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f5f7fa;
+  --surface:#ffffff;
+  --surface2:#f0f3f9;
+  --surface3:#e8edf6;
+  --blue:#1d4ed8;
+  --blue2:#2563eb;
+  --blue3:#3b82f6;
+  --blue-light:#eff6ff;
+  --blue-mid:#dbeafe;
+  --red:#dc2626;
+  --red-light:#fef2f2;
+  --yellow:#d97706;
+  --yellow-light:#fffbeb;
+  --green:#059669;
+  --green-light:#ecfdf5;
+  --gray:#64748b;
+  --text:#0f172a;
+  --t2:#475569;
+  --t3:#94a3b8;
+  --border:#e2e8f0;
+  --border2:#cbd5e1;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);font-size:13px;min-height:100vh}
+.mono{font-family:'DM Mono',monospace}
+
+/* ── HEADER ── */
+.hdr{
+  background:var(--blue);
+  padding:0 28px;
+  height:52px;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  position:sticky;
+  top:0;
+  z-index:200;
+  box-shadow:0 2px 8px rgba(29,78,216,.3);
+}
+.hdr-logo{
+  font-size:14px;
+  font-weight:700;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  white-space:nowrap;
+}
+.hdr-logo-sub{color:rgba(255,255,255,.6);font-weight:400;font-size:12px}
+.hdr-divider{width:1px;height:20px;background:rgba(255,255,255,.2)}
+.hdr-meta{font-size:11px;color:rgba(255,255,255,.65);font-family:'DM Mono',monospace}
+
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.dept-sel{
+  padding:5px 12px;
+  border-radius:6px;
+  border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  font-size:12px;
+  font-family:'Noto Sans KR',sans-serif;
+  cursor:pointer;
+  min-width:160px;
+}
+.dept-sel option{background:#1d4ed8;color:#fff}
+.view-mode{
+  display:flex;
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:6px;
+  overflow:hidden;
+}
+.vm-btn{
+  padding:5px 14px;
+  background:transparent;
+  border:none;
+  color:rgba(255,255,255,.7);
+  font-size:11px;
+  font-family:'Noto Sans KR',sans-serif;
+  cursor:pointer;
+  transition:all .15s;
+}
+.vm-btn.active{background:rgba(255,255,255,.2);color:#fff;font-weight:600}
+.hdr-kpi{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:4px 12px;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:6px;
+}
+.hdr-kpi-num{font-size:18px;font-weight:700;color:#fff;font-family:'DM Mono',monospace}
+.hdr-kpi-lbl{font-size:10px;color:rgba(255,255,255,.6);margin-left:4px}
+
+/* ── TABS ── */
+.tabs{
+  background:var(--surface);
+  border-bottom:2px solid var(--border);
+  padding:0 28px;
+  display:flex;
+  gap:0;
+  position:sticky;
+  top:52px;
+  z-index:100;
+  box-shadow:var(--shadow);
+}
+.tab{
+  padding:14px 20px;
+  border:none;
+  background:transparent;
+  color:var(--t2);
+  cursor:pointer;
+  font-size:12px;
+  font-family:'Noto Sans KR',sans-serif;
+  font-weight:500;
+  border-bottom:2px solid transparent;
+  margin-bottom:-2px;
+  transition:all .15s;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  white-space:nowrap;
+}
+.tab:hover{color:var(--blue2)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:700}
+.tab-badge{
+  font-size:10px;
+  padding:1px 6px;
+  border-radius:10px;
+  font-family:'DM Mono',monospace;
+}
+.tab-badge.red{background:var(--red-light);color:var(--red)}
+.tab-badge.blue{background:var(--blue-light);color:var(--blue)}
+
+/* ── MAIN ── */
+main{padding:24px 28px;max-width:1400px;margin:0 auto}
+.page{display:none}
+.page.active{display:block}
+
+/* ── CARDS ── */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.kpi{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:16px 18px;
+  box-shadow:var(--shadow);
+}
+.kpi-lbl{font-size:11px;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.kpi-val{font-size:28px;font-weight:700;font-family:'DM Mono',monospace;line-height:1}
+.kpi-sub{font-size:11px;color:var(--t3);margin-top:5px}
+.kpi-trend{font-size:11px;margin-top:4px}
+.kpi-trend.up{color:var(--green)}
+.kpi-trend.dn{color:var(--red)}
+.kpi.alert{border-left:3px solid var(--red)}
+.kpi.warn{border-left:3px solid var(--yellow)}
+.kpi.ok{border-left:3px solid var(--green)}
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:16px;
+}
+.card-title{
+  font-size:12px;
+  font-weight:700;
+  color:var(--text);
+  margin-bottom:16px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.card-title-sub{font-size:11px;font-weight:400;color:var(--t3);margin-left:auto}
+
+/* ── GRID LAYOUTS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+.g2-3{display:grid;grid-template-columns:2fr 3fr;gap:16px;margin-bottom:16px}
+
+/* ── PLATFORM BARS ── */
+.pbar-wrap{display:flex;flex-direction:column;gap:10px}
+.pbar-row{display:flex;align-items:center;gap:10px}
+.pbar-lbl{width:90px;font-size:12px;color:var(--t2);text-align:right;flex-shrink:0}
+.pbar-track{flex:1;height:22px;background:var(--surface2);border-radius:4px;overflow:hidden;position:relative}
+.pbar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:10px;transition:width .5s ease}
+.pbar-score{font-size:11px;color:#fff;font-weight:600;font-family:'DM Mono',monospace}
+.pbar-tag{font-size:10px;color:var(--t3);width:60px;text-align:left;flex-shrink:0}
+
+/* ── SOV BARS ── */
+.sov-wrap{display:flex;flex-direction:column;gap:8px}
+.sov-row{display:flex;align-items:center;gap:10px}
+.sov-lbl{width:80px;font-size:11px;color:var(--t2);text-align:right;flex-shrink:0}
+.sov-track{flex:1;height:18px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.sov-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:8px}
+.sov-pct{font-size:10px;color:#fff;font-weight:600;font-family:'DM Mono',monospace}
+.sov-self{font-size:11px;font-weight:700;color:var(--blue)}
+
+/* ── DEPT TABLE ── */
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;color:var(--t3);font-weight:500;padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);background:var(--surface2)}
+td{font-size:12px;color:var(--text);padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr.clickable{cursor:pointer}
+tr.clickable:hover td{background:var(--blue-light)}
+
+/* ── BADGES ── */
+.bdg{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;white-space:nowrap}
+.bdg.red{background:var(--red-light);color:var(--red)}
+.bdg.yellow{background:var(--yellow-light);color:var(--yellow)}
+.bdg.green{background:var(--green-light);color:var(--green)}
+.bdg.blue{background:var(--blue-light);color:var(--blue)}
+.bdg.gray{background:var(--surface2);color:var(--gray)}
+.bdg.p1{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.bdg.p2{background:#fffbeb;color:#d97706;border:1px solid #fde68a}
+.bdg.p3{background:#f0fdf4;color:#059669;border:1px solid #a7f3d0}
+
+/* ── PROGRESS BAR ── */
+.prog-wrap{margin-bottom:10px}
+.prog-lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--t2);margin-bottom:4px}
+.prog-track{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;transition:width .5s}
+
+/* ── INTENT FILTER ── */
+.intent-filter{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.intent-filter label{font-size:11px;color:var(--t3);margin-right:4px}
+.if-btn{
+  padding:5px 14px;
+  border-radius:20px;
+  border:1px solid var(--border2);
+  background:var(--surface);
+  color:var(--t2);
+  cursor:pointer;
+  font-size:11px;
+  font-family:'Noto Sans KR',sans-serif;
+  font-weight:500;
+  transition:all .15s;
+}
+.if-btn:hover{border-color:var(--blue3);color:var(--blue)}
+.if-btn.active{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+.if-btn.shared{border-style:dashed}
+.if-btn.shared.active{background:var(--blue);border-style:solid}
+
+/* ── DEPT FILTER ── */
+.dept-filter{display:flex;gap:6px;margin-bottom:0;flex-wrap:wrap;align-items:center}
+.df-btn{
+  padding:4px 12px;
+  border-radius:6px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--t2);
+  cursor:pointer;
+  font-size:11px;
+  font-family:'Noto Sans KR',sans-serif;
+  transition:all .15s;
+}
+.df-btn.active{background:var(--blue-mid);border-color:var(--blue3);color:var(--blue);font-weight:600}
+
+/* ── INTENT PANELS ── */
+.intent-panel{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+  margin-bottom:12px;
+  box-shadow:var(--shadow);
+}
+.intent-panel.hidden{display:none}
+.ip-header{
+  padding:12px 16px;
+  background:var(--surface2);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.ip-tag{
+  font-size:11px;
+  font-weight:700;
+  padding:3px 10px;
+  border-radius:4px;
+}
+.ip-title{font-size:12px;color:var(--t2);flex:1}
+.ip-stats{display:flex;gap:8px;align-items:center}
+.ip-stat{font-size:11px;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:4px}
+.ip-shared{
+  font-size:10px;
+  padding:2px 8px;
+  border-radius:4px;
+  background:rgba(37,99,235,0.1);
+  color:var(--blue);
+  border:1px dashed var(--blue3);
+  font-weight:600;
+}
+.ip-body{padding:0}
+
+/* ── QUERY ITEMS ── */
+.q-item{
+  display:grid;
+  grid-template-columns:24px 1fr 90px 80px 80px 100px 80px;
+  align-items:center;
+  gap:8px;
+  padding:10px 16px;
+  border-bottom:1px solid var(--border);
+  transition:background .1s;
+}
+.q-item:last-child{border-bottom:none}
+.q-item:hover{background:var(--blue-light)}
+.q-item.hidden{display:none}
+.q-num{font-size:10px;color:var(--t3);font-family:'DM Mono',monospace;text-align:center}
+.q-text{font-size:12px;color:var(--text);line-height:1.4}
+.q-vol{font-size:11px;font-family:'DM Mono',monospace;color:var(--t2)}
+.q-vol.hot{color:var(--red);font-weight:600}
+.q-dept{font-size:10px;color:var(--blue);background:var(--blue-light);padding:2px 6px;border-radius:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.q-dept.shared{background:rgba(37,99,235,0.08);color:var(--blue);border:1px dashed var(--blue3)}
+.q-header{
+  display:grid;
+  grid-template-columns:24px 1fr 90px 80px 80px 100px 80px;
+  gap:8px;
+  padding:8px 16px;
+  background:var(--surface2);
+  border-bottom:1px solid var(--border);
+}
+.q-header span{font-size:10px;color:var(--t3);font-weight:500}
+
+/* ── TECH ITEMS ── */
+.tech-item{
+  display:grid;
+  grid-template-columns:1fr 140px 120px 80px 100px;
+  align-items:center;
+  gap:12px;
+  padding:10px 12px;
+  border-bottom:1px solid var(--border);
+}
+.tech-item:last-child{border-bottom:none}
+.tech-item:hover{background:var(--surface2)}
+.tech-name{font-size:12px;color:var(--text)}
+.tech-status{font-size:11px}
+.tech-dept{font-size:10px;color:var(--blue)}
+.tech-check{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+input[type=checkbox]{
+  width:14px;height:14px;
+  accent-color:var(--blue);
+  cursor:pointer;
+}
+.tech-check label{font-size:11px;color:var(--t2);cursor:pointer}
+
+/* ── ALERT BOX ── */
+.alert-box{
+  background:var(--red-light);
+  border:1px solid #fecaca;
+  border-radius:8px;
+  padding:12px 16px;
+  margin-bottom:16px;
+  font-size:12px;
+  color:var(--red);
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  line-height:1.6;
+}
+
+/* ── REPORT ── */
+.report-dept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.rdept{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:16px;
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  transition:all .2s;
+}
+.rdept:hover,.rdept.selected{border-color:var(--blue);background:var(--blue-light)}
+.rdept-name{font-size:12px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.rdept-score{font-size:22px;font-weight:700;font-family:'DM Mono',monospace;margin-bottom:6px}
+.rdept-stats{display:flex;gap:8px}
+.rdept-stat{font-size:10px;color:var(--t3)}
+
+/* ── MINI CHART (SVG) ── */
+.mini-chart{width:100%;height:60px}
+
+/* ── ISSUE LIST ── */
+.issue-list{display:flex;flex-direction:column;gap:8px}
+.issue-item{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:10px 12px;
+  background:var(--surface2);
+  border-radius:7px;
+  border:1px solid var(--border);
+  cursor:pointer;
+  transition:all .15s;
+}
+.issue-item:hover{border-color:var(--blue3);background:var(--blue-light)}
+.issue-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.issue-content{flex:1}
+.issue-title{font-size:12px;color:var(--text);line-height:1.4;font-weight:500}
+.issue-sub{font-size:11px;color:var(--t3);margin-top:2px}
+
+/* ── AI 추천 패널 ── */
+.ai-rec-panel{
+  background:linear-gradient(135deg,#1e3a8a 0%,#1d4ed8 100%);
+  border-radius:10px;
+  margin-bottom:16px;
+  overflow:hidden;
+  box-shadow:0 4px 12px rgba(29,78,216,.2);
+}
+.ai-rec-header{
+  padding:14px 20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  cursor:pointer;
+  user-select:none;
+}
+.ai-rec-header:hover{background:rgba(255,255,255,.05)}
+.ai-rec-badge{
+  font-size:11px;
+  font-weight:700;
+  padding:3px 10px;
+  border-radius:4px;
+  background:rgba(255,255,255,.15);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.25);
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+.ai-rec-title{font-size:13px;font-weight:700;color:#fff}
+.ai-rec-sub{font-size:11px;color:rgba(255,255,255,.6);margin-left:4px}
+.ai-rec-toggle{margin-left:auto;color:rgba(255,255,255,.6);font-size:12px;transition:transform .2s}
+.ai-rec-toggle.open{transform:rotate(180deg)}
+.ai-rec-body{
+  background:var(--surface);
+  border-top:1px solid rgba(255,255,255,.1);
+  display:none;
+}
+.ai-rec-body.open{display:block}
+.ai-rec-loading{
+  padding:32px;
+  text-align:center;
+  color:var(--t3);
+  font-size:13px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+}
+.ai-rec-spinner{
+  width:28px;height:28px;
+  border:3px solid var(--border);
+  border-top-color:var(--blue);
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-rec-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0;
+}
+.ai-rec-card{
+  padding:18px 20px;
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  transition:background .15s;
+}
+.ai-rec-card:hover{background:var(--blue-light)}
+.ai-rec-card:nth-child(3n){border-right:none}
+.ai-rec-card:nth-last-child(-n+3){border-bottom:none}
+.arc-rank{
+  font-size:10px;
+  font-family:'DM Mono',monospace;
+  font-weight:700;
+  color:var(--blue);
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.arc-rank-num{
+  width:20px;height:20px;
+  background:var(--blue);
+  color:#fff;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10px;
+  font-weight:700;
+}
+.arc-query{
+  font-size:13px;
+  font-weight:700;
+  color:var(--text);
+  margin-bottom:8px;
+  line-height:1.4;
+}
+.arc-reason{
+  font-size:11px;
+  color:var(--t2);
+  line-height:1.6;
+  margin-bottom:10px;
+}
+.arc-meta{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.arc-vol{
+  font-size:10px;
+  font-family:'DM Mono',monospace;
+  padding:2px 7px;
+  border-radius:3px;
+  background:var(--red-light);
+  color:var(--red);
+  font-weight:600;
+}
+.arc-dept{
+  font-size:10px;
+  padding:2px 7px;
+  border-radius:3px;
+  background:var(--blue-light);
+  color:var(--blue);
+}
+.arc-format{
+  font-size:10px;
+  padding:2px 7px;
+  border-radius:3px;
+  background:var(--green-light);
+  color:var(--green);
+}
+.arc-add-btn{
+  margin-top:10px;
+  padding:5px 12px;
+  border-radius:5px;
+  border:1px solid var(--border2);
+  background:var(--surface);
+  color:var(--blue);
+  font-size:11px;
+  font-family:'Noto Sans KR',sans-serif;
+  font-weight:600;
+  cursor:pointer;
+  width:100%;
+  transition:all .15s;
+}
+.arc-add-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+.arc-add-btn.added{background:var(--green-light);color:var(--green);border-color:var(--green);cursor:default}
+.ai-rec-footer{
+  padding:10px 20px;
+  background:var(--surface2);
+  border-top:1px solid var(--border);
+  font-size:11px;
+  color:var(--t3);
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+/* ── SCORE PILL ── */
+.score-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:3px 10px;
+  border-radius:12px;
+  font-size:12px;
+  font-family:'DM Mono',monospace;
+  font-weight:600;
+}
+.score-pill.bad{background:var(--red-light);color:var(--red)}
+.score-pill.mid{background:var(--yellow-light);color:var(--yellow)}
+.score-pill.good{background:var(--green-light);color:var(--green)}
+
+/* ── SECTION TITLE ── */
+.sec-title{
+  font-size:11px;
+  font-weight:700;
+  color:var(--t3);
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  margin-bottom:12px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+
+/* ── TREND CHART ── */
+.trend-svg{width:100%;height:140px}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-logo">
+    Samsung<span style="color:#93c5fd">GEO</span>
+    <span class="hdr-logo-sub">· MARS 레시피북</span>
+  </div>
+  <div class="hdr-divider"></div>
+  <div class="hdr-meta">2025 W04 · 2025-01-22 09:00 KST</div>
+
+  <div class="hdr-kpi">
+    <span class="hdr-kpi-num" style="color:#fbbf24">34</span>
+    <span class="hdr-kpi-lbl">전사 GEO 점수</span>
+  </div>
+  <div class="hdr-kpi">
+    <span class="hdr-kpi-num" style="color:#f87171">23</span>
+    <span class="hdr-kpi-lbl">미조치 이슈</span>
+  </div>
+
+  <div class="hdr-right">
+    <select class="dept-sel" onchange="filterByDept(this.value)" id="globalDeptSel">
+      <option value="all">전체 부서 보기</option>
+      <option value="brand">브랜드전략파트</option>
+      <option value="content">콘텐츠기획파트</option>
+      <option value="web">홈페이지운영파트</option>
+      <option value="auto">자동차 다이렉트영업부</option>
+      <option value="long">장기 다이렉트영업부</option>
+      <option value="rc">RC파트</option>
+    </select>
+  </div>
+</header>
+
+<!-- TABS -->
+<nav class="tabs">
+  <button class="tab active" onclick="switchTab(0,this)">
+    📊 전사 현황
+  </button>
+  <button class="tab" onclick="switchTab(1,this)">
+    💬 인텐트 관리
+    <span class="tab-badge red">미언급 31</span>
+  </button>
+  <button class="tab" onclick="switchTab(2,this)">
+    🔧 기술 진단
+    <span class="tab-badge red">P1 · 5건</span>
+  </button>
+  <button class="tab" onclick="switchTab(3,this)">
+    📋 부서별 레포트
+  </button>
+</nav>
+
+<main>
+
+<!-- ======== TAB 0: 전사 현황 ======== -->
+<div class="page active" id="p0">
+
+  <!-- KPI ROW -->
+  <div class="kpi-row">
+    <div class="kpi warn">
+      <div class="kpi-lbl">전사 AI 가시성</div>
+      <div class="kpi-val mono" style="color:var(--yellow)">34</div>
+      <div class="kpi-trend dn">▼ 2.1pt 전주 대비</div>
+    </div>
+    <div class="kpi alert">
+      <div class="kpi-lbl">자사 URL 인용</div>
+      <div class="kpi-val mono" style="color:var(--red)">0%</div>
+      <div class="kpi-sub">비교사이트 100% 점유</div>
+    </div>
+    <div class="kpi alert">
+      <div class="kpi-lbl">미언급 쿼리</div>
+      <div class="kpi-val mono" style="color:var(--red)">31건</div>
+      <div class="kpi-sub">전체 48개 쿼리 중</div>
+    </div>
+    <div class="kpi alert">
+      <div class="kpi-lbl">미조치 이슈</div>
+      <div class="kpi-val mono" style="color:var(--red)">23건</div>
+      <div class="kpi-sub">P1: 5 · P2: 11 · P3: 7</div>
+    </div>
+    <div class="kpi warn">
+      <div class="kpi-lbl">SOV 순위</div>
+      <div class="kpi-val mono" style="color:var(--yellow)">6위</div>
+      <div class="kpi-sub">운전자보험 추천 쿼리</div>
+    </div>
+  </div>
+
+  <div class="g2-3">
+    <!-- 플랫폼별 가시성 -->
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">AI 플랫폼별 가시성 점수</div>
+      <div class="pbar-wrap">
+        <div class="pbar-row">
+          <div class="pbar-lbl">Claude</div>
+          <div class="pbar-track">
+            <div class="pbar-fill" style="width:41%;background:#2563eb"><span class="pbar-score">41</span></div>
+          </div>
+          <div class="pbar-tag mono" style="color:var(--yellow)">▼ -1</div>
+        </div>
+        <div class="pbar-row">
+          <div class="pbar-lbl">ChatGPT</div>
+          <div class="pbar-track">
+            <div class="pbar-fill" style="width:38%;background:#7c3aed"><span class="pbar-score">38</span></div>
+          </div>
+          <div class="pbar-tag mono" style="color:var(--t3)">— 0</div>
+        </div>
+        <div class="pbar-row">
+          <div class="pbar-lbl">Gemini</div>
+          <div class="pbar-track">
+            <div class="pbar-fill" style="width:31%;background:#d97706"><span class="pbar-score">31</span></div>
+          </div>
+          <div class="pbar-tag mono" style="color:var(--yellow)">▼ -1</div>
+        </div>
+        <div class="pbar-row">
+          <div class="pbar-lbl">Perplexity</div>
+          <div class="pbar-track">
+            <div class="pbar-fill" style="width:23%;background:#0891b2"><span class="pbar-score">23</span></div>
+          </div>
+          <div class="pbar-tag mono" style="color:var(--yellow)">▼ -2</div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px">
+        <div class="sec-title">SOV — 운전자보험 추천 쿼리</div>
+        <div class="sov-wrap">
+          <div class="sov-row">
+            <div class="sov-lbl" style="color:var(--red)">현대해상</div>
+            <div class="sov-track"><div class="sov-fill" style="width:84%;background:#ef4444"><span class="sov-pct">84%</span></div></div>
+          </div>
+          <div class="sov-row">
+            <div class="sov-lbl">DB손보</div>
+            <div class="sov-track"><div class="sov-fill" style="width:72%;background:#94a3b8"><span class="sov-pct">72%</span></div></div>
+          </div>
+          <div class="sov-row">
+            <div class="sov-lbl">KB손보</div>
+            <div class="sov-track"><div class="sov-fill" style="width:66%;background:#94a3b8"><span class="sov-pct">66%</span></div></div>
+          </div>
+          <div class="sov-row">
+            <div class="sov-lbl">메리츠화재</div>
+            <div class="sov-track"><div class="sov-fill" style="width:57%;background:#94a3b8"><span class="sov-pct">57%</span></div></div>
+          </div>
+          <div class="sov-row">
+            <div class="sov-lbl sov-self">삼성화재</div>
+            <div class="sov-track"><div class="sov-fill" style="width:11%;background:#2563eb"><span class="sov-pct">11%</span></div></div>
+          </div>
+        </div>
+        <div class="alert-box" style="margin-top:12px;margin-bottom:0;padding:8px 12px;font-size:11px">
+          ⚠ 업계 1위 브랜드 SOV 11% — 콘텐츠 부재가 핵심 원인
+        </div>
+      </div>
+    </div>
+
+    <!-- 부서별 현황 -->
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">
+        부서별 GEO 이행 현황
+        <span class="card-title-sub">클릭 시 레포트로 이동</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>부서명</th>
+            <th>담당 인텐트</th>
+            <th>GEO 점수</th>
+            <th>미언급</th>
+            <th>P1 이슈</th>
+            <th>상태</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="clickable" onclick="goReport('brand')">
+            <td><b>브랜드전략파트</b></td>
+            <td><span class="bdg blue">신뢰확인</span></td>
+            <td><span class="score-pill mid">48</span></td>
+            <td class="mono" style="color:var(--yellow)">2건</td>
+            <td class="mono">0</td>
+            <td><span class="bdg yellow">점검중</span></td>
+          </tr>
+          <tr class="clickable" onclick="goReport('content')">
+            <td><b>콘텐츠기획파트</b></td>
+            <td><span class="bdg blue">정보탐색</span> <span class="bdg gray">비교</span></td>
+            <td><span class="score-pill bad">31</span></td>
+            <td class="mono" style="color:var(--red)">8건</td>
+            <td class="mono" style="color:var(--red)">2</td>
+            <td><span class="bdg red">위험</span></td>
+          </tr>
+          <tr class="clickable" onclick="goReport('web')">
+            <td><b>홈페이지운영파트</b></td>
+            <td><span class="bdg gray">기술구조</span></td>
+            <td><span class="score-pill bad">22</span></td>
+            <td class="mono" style="color:var(--red)">—</td>
+            <td class="mono" style="color:var(--red)">5</td>
+            <td><span class="bdg red">위험</span></td>
+          </tr>
+          <tr class="clickable" onclick="goReport('long')">
+            <td><b>장기 다이렉트영업부</b></td>
+            <td><span class="bdg yellow">추천</span> <span class="bdg gray">가격</span></td>
+            <td><span class="score-pill bad">18</span></td>
+            <td class="mono" style="color:var(--red)">12건</td>
+            <td class="mono" style="color:var(--red)">2</td>
+            <td><span class="bdg red">위험</span></td>
+          </tr>
+          <tr class="clickable" onclick="goReport('auto')">
+            <td><b>자동차 다이렉트영업부</b></td>
+            <td><span class="bdg gray">비교</span> <span class="bdg gray">가입</span></td>
+            <td><span class="score-pill mid">44</span></td>
+            <td class="mono" style="color:var(--yellow)">6건</td>
+            <td class="mono">1</td>
+            <td><span class="bdg yellow">점검중</span></td>
+          </tr>
+          <tr class="clickable" onclick="goReport('rc')">
+            <td><b>RC파트</b></td>
+            <td><span class="bdg gray">가입/전환</span></td>
+            <td><span class="score-pill bad">12</span></td>
+            <td class="mono" style="color:var(--red)">3건</td>
+            <td class="mono">0</td>
+            <td><span class="bdg red">위험</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top:16px">
+        <div class="sec-title">핵심 이슈 알림</div>
+        <div class="issue-list">
+          <div class="issue-item" onclick="switchTab(2,document.querySelectorAll('.tab')[2])">
+            <div class="issue-dot" style="background:var(--red)"></div>
+            <div class="issue-content">
+              <div class="issue-title">Schema @type <b>Person</b> 오류 — InsuranceAgency로 즉시 교체 필요</div>
+              <div class="issue-sub">홈페이지운영파트 · P1 · 2025-01-22</div>
+            </div>
+            <span class="bdg p1">P1</span>
+          </div>
+          <div class="issue-item" onclick="switchTab(2,document.querySelectorAll('.tab')[2])">
+            <div class="issue-dot" style="background:var(--red)"></div>
+            <div class="issue-content">
+              <div class="issue-title">sitemap lastmod <b>921일</b> 미갱신</div>
+              <div class="issue-sub">홈페이지운영파트 · P1 · 마지막 갱신 2022-07-21</div>
+            </div>
+            <span class="bdg p1">P1</span>
+          </div>
+          <div class="issue-item" onclick="switchTab(1,document.querySelectorAll('.tab')[1])">
+            <div class="issue-dot" style="background:var(--yellow)"></div>
+            <div class="issue-content">
+              <div class="issue-title">운전자보험 추천 쿼리 전 플랫폼 <b>미언급</b> — 4주 연속</div>
+              <div class="issue-sub">장기 다이렉트영업부 · P2 · 월 검색량 18만</div>
+            </div>
+            <span class="bdg p2">P2</span>
+          </div>
+          <div class="issue-item">
+            <div class="issue-dot" style="background:var(--yellow)"></div>
+            <div class="issue-content">
+              <div class="issue-title">자사 URL 인용 <b>0건</b> — banksalad 단독 점유</div>
+              <div class="issue-sub">콘텐츠기획파트 · P2</div>
+            </div>
+            <span class="bdg p2">P2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== TAB 1: 인텐트 관리 ======== -->
+<div class="page" id="p1">
+
+<!-- AI 추천 인텐트 패널 -->
+<div class="ai-rec-panel">
+  <div class="ai-rec-header" onclick="toggleAiRec(this)">
+    <div class="ai-rec-badge">
+      <span>✦</span> AI 추천
+    </div>
+    <div>
+      <span class="ai-rec-title">지금 당장 공략해야 할 인텐트</span>
+      <span class="ai-rec-sub">— 미언급·검색량·경쟁사 데이터 기반 자동 분석</span>
+    </div>
+    <span class="ai-rec-toggle" id="aiRecToggle">▼</span>
+  </div>
+  <div class="ai-rec-body" id="aiRecBody">
+    <div class="ai-rec-loading" id="aiRecLoading">
+      <div class="ai-rec-spinner"></div>
+      <span>MARS GEO 레시피북 분석 중...</span>
+    </div>
+    <div id="aiRecResult" style="display:none">
+      <div class="ai-rec-grid" id="aiRecGrid"></div>
+      <div class="ai-rec-footer">
+        ✦ Princeton GEO 논문 기반 · 미언급 쿼리 × 월 검색량 × 경쟁사 SOV × 담당 부서 노드 상태 종합 분석
+        <span style="margin-left:auto;font-family:'DM Mono',monospace">2025-01-22 09:00 KST</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 직접 추가 -->
+<div class="card" style="padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+  <span style="font-size:11px;color:var(--t3);white-space:nowrap">쿼리 직접 추가</span>
+  <input id="customQueryInput" type="text" placeholder="모니터링할 쿼리를 입력하세요 (예: 운전자보험 비탑승 보장 조건)" style="flex:1;padding:7px 12px;border:1px solid var(--border2);border-radius:6px;font-size:12px;font-family:'Noto Sans KR',sans-serif;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')addCustomQuery()">
+  <select id="customDept" style="padding:7px 10px;border:1px solid var(--border2);border-radius:6px;font-size:12px;font-family:'Noto Sans KR',sans-serif;color:var(--text)">
+    <option value="long">장기다이렉트</option>
+    <option value="auto">자동차다이렉트</option>
+    <option value="content">콘텐츠기획</option>
+    <option value="brand">브랜드전략</option>
+    <option value="web">홈페이지운영</option>
+    <option value="rc">RC파트</option>
+  </select>
+  <select id="customIntent" style="padding:7px 10px;border:1px solid var(--border2);border-radius:6px;font-size:12px;font-family:'Noto Sans KR',sans-serif;color:var(--text)">
+    <option value="정보탐색">정보탐색</option>
+    <option value="추천">추천</option>
+    <option value="비교">비교</option>
+    <option value="가격">가격</option>
+    <option value="신뢰확인">신뢰확인</option>
+    <option value="가입전환">가입/전환</option>
+  </select>
+  <button onclick="addCustomQuery()" style="padding:7px 16px;background:var(--blue);color:#fff;border:none;border-radius:6px;font-size:12px;font-family:'Noto Sans KR',sans-serif;font-weight:600;cursor:pointer;white-space:nowrap">+ 추가</button>
+</div>
+
+  <!-- 필터 영역 -->
+  <div class="card" style="padding:16px 20px">
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:11px;color:var(--t3);margin-bottom:6px">인텐트 유형</div>
+        <div class="intent-filter" style="margin-bottom:0" id="intentFilter">
+          <button class="if-btn active" onclick="filterIntent('all',this)">전체</button>
+          <button class="if-btn shared" onclick="filterIntent('추천',this)" title="공동 관리">⚑ 추천 (공동)</button>
+          <button class="if-btn" onclick="filterIntent('비교',this)">비교</button>
+          <button class="if-btn" onclick="filterIntent('정보탐색',this)">정보탐색</button>
+          <button class="if-btn" onclick="filterIntent('가격',this)">가격</button>
+          <button class="if-btn" onclick="filterIntent('신뢰확인',this)">신뢰확인</button>
+          <button class="if-btn" onclick="filterIntent('가입전환',this)">가입/전환</button>
+        </div>
+      </div>
+      <div style="width:1px;height:32px;background:var(--border)"></div>
+      <div>
+        <div style="font-size:11px;color:var(--t3);margin-bottom:6px">담당 부서</div>
+        <div class="dept-filter" id="deptFilter2">
+          <button class="df-btn active" onclick="filterDept2('all',this)">전체</button>
+          <button class="df-btn" onclick="filterDept2('brand',this)">브랜드전략</button>
+          <button class="df-btn" onclick="filterDept2('content',this)">콘텐츠기획</button>
+          <button class="df-btn" onclick="filterDept2('web',this)">홈페이지운영</button>
+          <button class="df-btn" onclick="filterDept2('long',this)">장기다이렉트</button>
+          <button class="df-btn" onclick="filterDept2('auto',this)">자동차다이렉트</button>
+          <button class="df-btn" onclick="filterDept2('rc',this)">RC</button>
+        </div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <span class="bdg red" style="font-size:11px">미언급 31</span>
+        <span class="bdg yellow" style="font-size:11px">간접 9</span>
+        <span class="bdg green" style="font-size:11px">직접 8</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 추천 (공동 관리) -->
+  <div class="intent-panel" data-intent="추천">
+    <div class="ip-header">
+      <span class="ip-tag" style="background:#fef3c7;color:#d97706">⭐ 추천 의도</span>
+      <span class="ip-title">AI가 1~3순위를 직접 제시 — 삼성화재 미언급률 91%</span>
+      <span class="ip-shared">⚑ 공동 관리 인텐트</span>
+      <div class="ip-stats">
+        <span class="ip-stat" style="background:var(--red-light);color:var(--red)">미언급 7</span>
+        <span class="ip-stat" style="background:var(--yellow-light);color:var(--yellow)">간접 1</span>
+      </div>
+    </div>
+    <div class="q-header">
+      <span>#</span><span>질문</span><span>월 검색량</span><span>언급 상태</span><span>언급 순위</span><span>담당 부서</span><span>점수</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">01</span>
+      <span class="q-text">운전자보험 추천해줘</span>
+      <span class="q-vol hot">🔥 18만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept shared">공동 관리</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">02</span>
+      <span class="q-text">40대 직장인 운전자보험 추천</span>
+      <span class="q-vol hot">🔥 4.2만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept shared">공동 관리</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">03</span>
+      <span class="q-text">월 1만원대 운전자보험 어디가 좋아?</span>
+      <span class="q-vol hot">🔥 3.1만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept shared">공동 관리</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="auto">
+      <span class="q-num">04</span>
+      <span class="q-text">자동차보험 처음 가입하는데 뭐 골라야 해</span>
+      <span class="q-vol">2.8만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept shared">공동 관리</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="auto">
+      <span class="q-num">05</span>
+      <span class="q-text">가족 모두 커버되는 자동차보험 추천</span>
+      <span class="q-vol">2.3만</span>
+      <span class="bdg yellow">간접언급</span>
+      <span style="color:var(--text);font-size:12px">3위</span>
+      <span class="q-dept shared">공동 관리</span>
+      <span class="mono" style="color:var(--yellow);font-size:12px">29</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">06</span>
+      <span class="q-text">보험료 아끼면서 보장 좋은 운전자보험</span>
+      <span class="q-vol">1.9만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept shared">공동 관리</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">07</span>
+      <span class="q-text">사고 많이 나는 직업군 운전자보험 추천</span>
+      <span class="q-vol">1.1만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept shared">공동 관리</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="auto">
+      <span class="q-num">08</span>
+      <span class="q-text">자동차보험 AI가 뽑은 TOP3</span>
+      <span class="q-vol">0.8만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept shared">공동 관리</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+  </div>
+
+  <!-- 비교 -->
+  <div class="intent-panel" data-intent="비교">
+    <div class="ip-header">
+      <span class="ip-tag" style="background:#f3e8ff;color:#7c3aed">⚔ 비교 의도</span>
+      <span class="ip-title">2개 이상 보험사 직접 비교 — 삼성화재 하위 4위 이하 87%</span>
+      <div class="ip-stats">
+        <span class="ip-stat" style="background:var(--red-light);color:var(--red)">미언급 5</span>
+        <span class="ip-stat" style="background:var(--yellow-light);color:var(--yellow)">간접 3</span>
+      </div>
+    </div>
+    <div class="q-header">
+      <span>#</span><span>질문</span><span>월 검색량</span><span>언급 상태</span><span>언급 순위</span><span>담당 부서</span><span>점수</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">09</span>
+      <span class="q-text">현대해상 vs 삼성화재 운전자보험 비교</span>
+      <span class="q-vol hot">🔥 6.1만</span>
+      <span class="bdg yellow">간접언급</span>
+      <span style="color:var(--text);font-size:12px">4위</span>
+      <span class="q-dept" data-deptkey="long">장기다이렉트</span>
+      <span class="mono" style="color:var(--yellow);font-size:12px">29</span>
+    </div>
+    <div class="q-item" data-dept="auto">
+      <span class="q-num">10</span>
+      <span class="q-text">자동차보험 다이렉트 회사별 비교표</span>
+      <span class="q-vol hot">🔥 5.4만</span>
+      <span class="bdg yellow">간접언급</span>
+      <span style="color:var(--text);font-size:12px">2위</span>
+      <span class="q-dept" data-deptkey="auto">자동차다이렉트</span>
+      <span class="mono" style="color:var(--yellow);font-size:12px">51</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">11</span>
+      <span class="q-text">운전자보험 비탑승 보장 비교 — 회사별</span>
+      <span class="q-vol">2.7만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="long">장기다이렉트</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="auto">
+      <span class="q-num">12</span>
+      <span class="q-text">삼성화재 vs DB손보 어디가 나아?</span>
+      <span class="q-vol">1.8만</span>
+      <span class="bdg yellow">간접언급</span>
+      <span style="color:var(--text);font-size:12px">혼합</span>
+      <span class="q-dept" data-deptkey="auto">자동차다이렉트</span>
+      <span class="mono" style="color:var(--yellow);font-size:12px">38</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">13</span>
+      <span class="q-text">운전자보험 보장범위 회사별 차이점</span>
+      <span class="q-vol">1.5만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="long">장기다이렉트</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="auto">
+      <span class="q-num">14</span>
+      <span class="q-text">다이렉트 보험 vs 설계사 보험 장단점</span>
+      <span class="q-vol">2.1만</span>
+      <span class="bdg green">직접언급</span>
+      <span style="color:var(--text);font-size:12px">2위</span>
+      <span class="q-dept" data-deptkey="auto">자동차다이렉트</span>
+      <span class="mono" style="color:var(--green);font-size:12px">63</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">15</span>
+      <span class="q-text">메리츠화재 운전자보험과 삼성화재 비교</span>
+      <span class="q-vol">0.9만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="long">장기다이렉트</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="auto">
+      <span class="q-num">16</span>
+      <span class="q-text">KB손보 vs 삼성화재 자동차보험 가격</span>
+      <span class="q-vol">1.2만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="auto">자동차다이렉트</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+  </div>
+
+  <!-- 정보탐색 -->
+  <div class="intent-panel" data-intent="정보탐색">
+    <div class="ip-header">
+      <span class="ip-tag" style="background:#eff6ff;color:#2563eb">🔍 정보탐색 의도</span>
+      <span class="ip-title">보험 지식·보장 학습 목적 — 자사 인용 가능성 최고</span>
+      <div class="ip-stats">
+        <span class="ip-stat" style="background:var(--red-light);color:var(--red)">미언급 7</span>
+        <span class="ip-stat" style="background:var(--green-light);color:var(--green)">직접 2</span>
+      </div>
+    </div>
+    <div class="q-header">
+      <span>#</span><span>질문</span><span>월 검색량</span><span>언급 상태</span><span>언급 순위</span><span>담당 부서</span><span>점수</span>
+    </div>
+    <div class="q-item" data-dept="content">
+      <span class="q-num">17</span>
+      <span class="q-text">운전자보험이 뭐야? 꼭 필요해?</span>
+      <span class="q-vol hot">🔥 9.3만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="content">콘텐츠기획</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">18</span>
+      <span class="q-text">비탑승 중 사고 보장 어떻게 되나요</span>
+      <span class="q-vol hot">🔥 4.8만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="long">장기다이렉트</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">19</span>
+      <span class="q-text">삼성화재 운전자보험 보장 내용 알려줘</span>
+      <span class="q-vol">3.2만</span>
+      <span class="bdg yellow">간접언급</span>
+      <span style="color:var(--text);font-size:12px">3위</span>
+      <span class="q-dept" data-deptkey="long">장기다이렉트</span>
+      <span class="mono" style="color:var(--yellow);font-size:12px">42</span>
+    </div>
+    <div class="q-item" data-dept="auto">
+      <span class="q-num">20</span>
+      <span class="q-text">자동차보험 가입 전 꼭 알아야 할 것</span>
+      <span class="q-vol">3.1만</span>
+      <span class="bdg yellow">간접언급</span>
+      <span style="color:var(--text);font-size:12px">2위</span>
+      <span class="q-dept" data-deptkey="auto">자동차다이렉트</span>
+      <span class="mono" style="color:var(--yellow);font-size:12px">51</span>
+    </div>
+    <div class="q-item" data-dept="auto">
+      <span class="q-num">21</span>
+      <span class="q-text">삼성화재 다이렉트 자동차보험 보장 범위</span>
+      <span class="q-vol">2.2만</span>
+      <span class="bdg green">직접언급</span>
+      <span style="color:var(--text);font-size:12px">2위</span>
+      <span class="q-dept" data-deptkey="auto">자동차다이렉트</span>
+      <span class="mono" style="color:var(--green);font-size:12px">63</span>
+    </div>
+    <div class="q-item" data-dept="content">
+      <span class="q-num">22</span>
+      <span class="q-text">운전자보험 면책 조항 뭐가 있어?</span>
+      <span class="q-vol">2.4만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="content">콘텐츠기획</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="content">
+      <span class="q-num">23</span>
+      <span class="q-text">운전자보험 갱신형 vs 비갱신형 차이</span>
+      <span class="q-vol">1.9만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="content">콘텐츠기획</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="content">
+      <span class="q-num">24</span>
+      <span class="q-text">운전자보험 보험료 결정 요인은?</span>
+      <span class="q-vol">1.7만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="content">콘텐츠기획</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="auto">
+      <span class="q-num">25</span>
+      <span class="q-text">블랙박스 할인 적용되는 보험사 어디야</span>
+      <span class="q-vol">1.4만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="auto">자동차다이렉트</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+  </div>
+
+  <!-- 가격 -->
+  <div class="intent-panel" data-intent="가격">
+    <div class="ip-header">
+      <span class="ip-tag" style="background:#ecfdf5;color:#059669">💰 가격 의도</span>
+      <span class="ip-title">보험료 계산·절약 중심 — 수치 부재로 전략적 위험</span>
+      <div class="ip-stats">
+        <span class="ip-stat" style="background:var(--red-light);color:var(--red)">미언급 6</span>
+        <span class="ip-stat" style="background:var(--yellow-light);color:var(--yellow)">간접 1</span>
+      </div>
+    </div>
+    <div class="q-header">
+      <span>#</span><span>질문</span><span>월 검색량</span><span>언급 상태</span><span>언급 순위</span><span>담당 부서</span><span>점수</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">26</span>
+      <span class="q-text">운전자보험 월 보험료 평균 얼마야</span>
+      <span class="q-vol hot">🔥 7.2만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="long">장기다이렉트</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="auto">
+      <span class="q-num">27</span>
+      <span class="q-text">30대 남성 자동차보험 보험료 기준</span>
+      <span class="q-vol hot">🔥 5.8만</span>
+      <span class="bdg yellow">간접언급</span>
+      <span style="color:var(--text);font-size:12px">3위</span>
+      <span class="q-dept" data-deptkey="auto">자동차다이렉트</span>
+      <span class="mono" style="color:var(--yellow);font-size:12px">38</span>
+    </div>
+    <div class="q-item" data-dept="auto">
+      <span class="q-num">28</span>
+      <span class="q-text">자동차보험 보험료 낮추는 방법</span>
+      <span class="q-vol">4.1만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="auto">자동차다이렉트</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="auto">
+      <span class="q-num">29</span>
+      <span class="q-text">다이렉트 보험 얼마나 저렴해?</span>
+      <span class="q-vol">3.4만</span>
+      <span class="bdg green">직접언급</span>
+      <span style="color:var(--text);font-size:12px">2위</span>
+      <span class="q-dept" data-deptkey="auto">자동차다이렉트</span>
+      <span class="mono" style="color:var(--green);font-size:12px">55</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">30</span>
+      <span class="q-text">삼성화재 운전자보험 월 1만원이면 어떤 보장?</span>
+      <span class="q-vol">2.1만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="long">장기다이렉트</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">31</span>
+      <span class="q-text">운전자보험 갱신 시 보험료 인상 폭</span>
+      <span class="q-vol">1.3만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="long">장기다이렉트</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="auto">
+      <span class="q-num">32</span>
+      <span class="q-text">자녀 추가 시 자동차보험 얼마나 오르나</span>
+      <span class="q-vol">1.6만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="auto">자동차다이렉트</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+  </div>
+
+  <!-- 신뢰확인 -->
+  <div class="intent-panel" data-intent="신뢰확인">
+    <div class="ip-header">
+      <span class="ip-tag" style="background:#fff7ed;color:#ea580c">🛡 신뢰확인 의도</span>
+      <span class="ip-title">보험사 평판·안전성·서비스 검증 — 삼성화재 상대적 강점</span>
+      <div class="ip-stats">
+        <span class="ip-stat" style="background:var(--green-light);color:var(--green)">직접 1위 3건</span>
+        <span class="ip-stat" style="background:var(--yellow-light);color:var(--yellow)">모니터링 1건</span>
+      </div>
+    </div>
+    <div class="q-header">
+      <span>#</span><span>질문</span><span>월 검색량</span><span>언급 상태</span><span>언급 순위</span><span>담당 부서</span><span>점수</span>
+    </div>
+    <div class="q-item" data-dept="brand">
+      <span class="q-num">33</span>
+      <span class="q-text">삼성화재 믿을 만한 보험사야?</span>
+      <span class="q-vol hot">🔥 4.2만</span>
+      <span class="bdg green">직접언급</span>
+      <span style="color:var(--text);font-size:12px">1위 긍정</span>
+      <span class="q-dept" data-deptkey="brand">브랜드전략</span>
+      <span class="mono" style="color:var(--green);font-size:12px">78</span>
+    </div>
+    <div class="q-item" data-dept="brand">
+      <span class="q-num">34</span>
+      <span class="q-text">삼성화재 보험금 청구 얼마나 잘 해줘?</span>
+      <span class="q-vol">3.1만</span>
+      <span class="bdg green">직접언급</span>
+      <span style="color:var(--text);font-size:12px">2위</span>
+      <span class="q-dept" data-deptkey="brand">브랜드전략</span>
+      <span class="mono" style="color:var(--green);font-size:12px">65</span>
+    </div>
+    <div class="q-item" data-dept="brand">
+      <span class="q-num">35</span>
+      <span class="q-text">운전자보험 보험금 잘 안 줘서 유명한 회사</span>
+      <span class="q-vol hot">🔥 2.6만</span>
+      <span class="bdg yellow">모니터링</span>
+      <span style="color:var(--text);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="brand">브랜드전략</span>
+      <span class="mono" style="color:var(--yellow);font-size:12px">—</span>
+    </div>
+    <div class="q-item" data-dept="brand">
+      <span class="q-num">36</span>
+      <span class="q-text">국내 손해보험사 재무건전성 순위</span>
+      <span class="q-vol">1.8만</span>
+      <span class="bdg yellow">간접언급</span>
+      <span style="color:var(--text);font-size:12px">2위</span>
+      <span class="q-dept" data-deptkey="brand">브랜드전략</span>
+      <span class="mono" style="color:var(--yellow);font-size:12px">44</span>
+    </div>
+  </div>
+
+  <!-- 가입/전환 -->
+  <div class="intent-panel" data-intent="가입전환">
+    <div class="ip-header">
+      <span class="ip-tag" style="background:#fdf4ff;color:#9333ea">⚡ 가입/전환 의도</span>
+      <span class="ip-title">구매 직전 단계 — AI 추천이 최종 결정에 직접 영향</span>
+      <div class="ip-stats">
+        <span class="ip-stat" style="background:var(--red-light);color:var(--red)">미언급 4</span>
+        <span class="ip-stat" style="background:var(--yellow-light);color:var(--yellow)">간접 2</span>
+      </div>
+    </div>
+    <div class="q-header">
+      <span>#</span><span>질문</span><span>월 검색량</span><span>언급 상태</span><span>언급 순위</span><span>담당 부서</span><span>점수</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">37</span>
+      <span class="q-text">운전자보험 온라인으로 바로 가입할 수 있어?</span>
+      <span class="q-vol hot">🔥 6.4만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="long">장기다이렉트</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="auto">
+      <span class="q-num">38</span>
+      <span class="q-text">자동차보험 갱신 vs 새로 가입 어느 게 나아</span>
+      <span class="q-vol hot">🔥 4.2만</span>
+      <span class="bdg yellow">간접언급</span>
+      <span style="color:var(--text);font-size:12px">2위</span>
+      <span class="q-dept" data-deptkey="auto">자동차다이렉트</span>
+      <span class="mono" style="color:var(--yellow);font-size:12px">44</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">39</span>
+      <span class="q-text">타 보험사에서 삼성화재로 갈아타도 돼?</span>
+      <span class="q-vol">3.8만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="long">장기다이렉트</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="auto">
+      <span class="q-num">40</span>
+      <span class="q-text">다이렉트 보험 가입 절차 알려줘</span>
+      <span class="q-vol">2.9만</span>
+      <span class="bdg yellow">간접언급</span>
+      <span style="color:var(--text);font-size:12px">2위</span>
+      <span class="q-dept" data-deptkey="auto">자동차다이렉트</span>
+      <span class="mono" style="color:var(--yellow);font-size:12px">51</span>
+    </div>
+    <div class="q-item" data-dept="long">
+      <span class="q-num">41</span>
+      <span class="q-text">운전자보험 중복 가입 되나요</span>
+      <span class="q-vol">2.3만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="long">장기다이렉트</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+    <div class="q-item" data-dept="rc">
+      <span class="q-num">42</span>
+      <span class="q-text">삼성화재 운전자보험 무료 상담 받는 방법</span>
+      <span class="q-vol">0.7만</span>
+      <span class="bdg red">미언급</span>
+      <span style="color:var(--t3);font-size:12px">—</span>
+      <span class="q-dept" data-deptkey="rc">RC파트</span>
+      <span class="mono" style="color:var(--red);font-size:12px">0</span>
+    </div>
+  </div>
+</div>
+
+<!-- ======== TAB 2: 기술 진단 ======== -->
+<div class="page" id="p2">
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">P1 — 즉시 조치 필요 <span class="card-title-sub">5건</span></div>
+        <div style="display:flex;flex-direction:column;gap:0">
+          <div class="tech-item">
+            <div><div class="tech-name">Schema.org @type 오류 (Person → InsuranceAgency)</div><div style="font-size:11px;color:var(--t3);margin-top:2px">홈페이지운영파트 · 2025-01-22 진단</div></div>
+            <span class="bdg red">Person (오류)</span>
+            <span style="font-size:11px;color:var(--blue)">홈페이지운영파트</span>
+            <span class="bdg p1">P1</span>
+            <div class="tech-check"><input type="checkbox" id="t1"><label for="t1">완료</label></div>
+          </div>
+          <div class="tech-item">
+            <div><div class="tech-name">Canonical URL 전체 미설정</div><div style="font-size:11px;color:var(--t3);margin-top:2px">홈페이지운영파트 · 전 페이지 영향</div></div>
+            <span class="bdg red">미설정</span>
+            <span style="font-size:11px;color:var(--blue)">홈페이지운영파트</span>
+            <span class="bdg p1">P1</span>
+            <div class="tech-check"><input type="checkbox" id="t2"><label for="t2">완료</label></div>
+          </div>
+          <div class="tech-item">
+            <div><div class="tech-name">sitemap lastmod 921일 미갱신</div><div style="font-size:11px;color:var(--t3);margin-top:2px">마지막 갱신 2022-07-21</div></div>
+            <span class="bdg red">2022-07-21</span>
+            <span style="font-size:11px;color:var(--blue)">홈페이지운영파트</span>
+            <span class="bdg p1">P1</span>
+            <div class="tech-check"><input type="checkbox" id="t3"><label for="t3">완료</label></div>
+          </div>
+          <div class="tech-item">
+            <div><div class="tech-name">JSON-LD 구조화 데이터 오류 14건</div><div style="font-size:11px;color:var(--t3);margin-top:2px">홈페이지운영파트 · Google Rich Results 검증 실패</div></div>
+            <span class="bdg red">오류 14건</span>
+            <span style="font-size:11px;color:var(--blue)">홈페이지운영파트</span>
+            <span class="bdg p1">P1</span>
+            <div class="tech-check"><input type="checkbox" id="t4"><label for="t4">완료</label></div>
+          </div>
+          <div class="tech-item" style="border-bottom:none">
+            <div><div class="tech-name">보장 수치 데이터 미게시 — AI 인용 불가</div><div style="font-size:11px;color:var(--t3);margin-top:2px">상품파트 · 연령대별 보험료·보장금액 없음</div></div>
+            <span class="bdg red">미게시</span>
+            <span style="font-size:11px;color:var(--blue)">장기다이렉트</span>
+            <span class="bdg p1">P1</span>
+            <div class="tech-check"><input type="checkbox" id="t5"><label for="t5">완료</label></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">P2 — 2주 내 조치 <span class="card-title-sub">11건</span></div>
+        <div style="display:flex;flex-direction:column;gap:0">
+          <div class="tech-item">
+            <div><div class="tech-name">llms.txt 미존재 — AI 크롤러 정책 없음</div></div>
+            <span class="bdg yellow">미존재</span>
+            <span style="font-size:11px;color:var(--blue)">홈페이지운영파트</span>
+            <span class="bdg p2">P2</span>
+            <div class="tech-check"><input type="checkbox" id="t6"><label for="t6">완료</label></div>
+          </div>
+          <div class="tech-item">
+            <div><div class="tech-name">AI 크롤러 robots.txt 허용 규칙 없음</div><div style="font-size:11px;color:var(--t3);margin-top:2px">GPTBot, PerplexityBot, ClaudeBot 미허용</div></div>
+            <span class="bdg yellow">규칙 없음</span>
+            <span style="font-size:11px;color:var(--blue)">홈페이지운영파트</span>
+            <span class="bdg p2">P2</span>
+            <div class="tech-check"><input type="checkbox" id="t7"><label for="t7">완료</label></div>
+          </div>
+          <div class="tech-item">
+            <div><div class="tech-name">Title 태그 길이 미달 (평균 11자)</div><div style="font-size:11px;color:var(--t3);margin-top:2px">권장 30자 이상</div></div>
+            <span class="bdg yellow">평균 11자</span>
+            <span style="font-size:11px;color:var(--blue)">홈페이지운영파트</span>
+            <span class="bdg p2">P2</span>
+            <div class="tech-check"><input type="checkbox" id="t8"><label for="t8">완료</label></div>
+          </div>
+          <div class="tech-item">
+            <div><div class="tech-name">FAQPage Schema 미적용</div></div>
+            <span class="bdg yellow">미적용</span>
+            <span style="font-size:11px;color:var(--blue)">콘텐츠기획파트</span>
+            <span class="bdg p2">P2</span>
+            <div class="tech-check"><input type="checkbox" id="t9"><label for="t9">완료</label></div>
+          </div>
+          <div class="tech-item">
+            <div><div class="tech-name">비교형 콘텐츠 전무</div><div style="font-size:11px;color:var(--t3);margin-top:2px">현대해상은 FAQ 43개 · 비교표 운영 중</div></div>
+            <span class="bdg yellow">없음</span>
+            <span style="font-size:11px;color:var(--blue)">콘텐츠기획파트</span>
+            <span class="bdg p2">P2</span>
+            <div class="tech-check"><input type="checkbox" id="t10"><label for="t10">완료</label></div>
+          </div>
+          <div class="tech-item">
+            <div><div class="tech-name">Meta Description 38% 누락</div></div>
+            <span class="bdg yellow">38% 누락</span>
+            <span style="font-size:11px;color:var(--blue)">홈페이지운영파트</span>
+            <span class="bdg p2">P2</span>
+            <div class="tech-check"><input type="checkbox" id="t11"><label for="t11">완료</label></div>
+          </div>
+          <div class="tech-item" style="border-bottom:none">
+            <div><div class="tech-name">모니모 앱 콘텐츠 웹 미러링 없음</div><div style="font-size:11px;color:var(--t3);margin-top:2px">앱 전용 → AI 크롤링 완전 불가</div></div>
+            <span class="bdg yellow">앱 전용</span>
+            <span style="font-size:11px;color:var(--blue)">홈페이지운영파트</span>
+            <span class="bdg p2">P2</span>
+            <div class="tech-check"><input type="checkbox" id="t12"><label for="t12">완료</label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">기술 진단 요약</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div>
+            <div class="prog-lbl"><span>P1 조치율</span><span style="color:var(--red)">0 / 5</span></div>
+            <div class="prog-track"><div class="prog-fill" style="width:0%;background:var(--red)"></div></div>
+          </div>
+          <div>
+            <div class="prog-lbl"><span>P2 조치율</span><span style="color:var(--yellow)">0 / 11</span></div>
+            <div class="prog-track"><div class="prog-fill" style="width:0%;background:var(--yellow)"></div></div>
+          </div>
+          <div>
+            <div class="prog-lbl"><span>P3 조치율</span><span style="color:var(--green)">0 / 7</span></div>
+            <div class="prog-track"><div class="prog-fill" style="width:0%;background:var(--green)"></div></div>
+          </div>
+          <div>
+            <div class="prog-lbl"><span>전체 진단 완료율</span><span>0 / 23</span></div>
+            <div class="prog-track"><div class="prog-fill" style="width:0%;background:var(--blue2)"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">부서별 기술 이슈</div>
+        <div class="pbar-wrap">
+          <div class="pbar-row">
+            <div class="pbar-lbl">홈페이지운영</div>
+            <div class="pbar-track"><div class="pbar-fill" style="width:65%;background:var(--red)"><span class="pbar-score">P1·5건</span></div></div>
+          </div>
+          <div class="pbar-row">
+            <div class="pbar-lbl">콘텐츠기획</div>
+            <div class="pbar-track"><div class="pbar-fill" style="width:35%;background:var(--yellow)"><span class="pbar-score">P2·3건</span></div></div>
+          </div>
+          <div class="pbar-row">
+            <div class="pbar-lbl">장기다이렉트</div>
+            <div class="pbar-track"><div class="pbar-fill" style="width:20%;background:var(--yellow)"><span class="pbar-score">P1·1건</span></div></div>
+          </div>
+          <div class="pbar-row">
+            <div class="pbar-lbl">브랜드전략</div>
+            <div class="pbar-track"><div class="pbar-fill" style="width:10%;background:#94a3b8"><span class="pbar-score">P3·1건</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== TAB 3: 부서별 레포트 ======== -->
+<div class="page" id="p3">
+  <div class="report-dept-grid" id="reportGrid">
+    <div class="rdept" onclick="selectReport('brand',this)" id="rd-brand">
+      <div class="rdept-name">📣 브랜드전략파트</div>
+      <div class="rdept-score" style="color:var(--yellow)">48</div>
+      <div class="rdept-stats">
+        <span class="rdept-stat">미언급 2 · P1 0</span>
+      </div>
+    </div>
+    <div class="rdept" onclick="selectReport('content',this)" id="rd-content">
+      <div class="rdept-name">✍️ 콘텐츠기획파트</div>
+      <div class="rdept-score" style="color:var(--red)">31</div>
+      <div class="rdept-stats">
+        <span class="rdept-stat">미언급 8 · P1 2</span>
+      </div>
+    </div>
+    <div class="rdept" onclick="selectReport('web',this)" id="rd-web">
+      <div class="rdept-name">🌐 홈페이지운영파트</div>
+      <div class="rdept-score" style="color:var(--red)">22</div>
+      <div class="rdept-stats">
+        <span class="rdept-stat">기술이슈 · P1 5</span>
+      </div>
+    </div>
+    <div class="rdept" onclick="selectReport('long',this)" id="rd-long">
+      <div class="rdept-name">🛡 장기 다이렉트영업부</div>
+      <div class="rdept-score" style="color:var(--red)">18</div>
+      <div class="rdept-stats">
+        <span class="rdept-stat">미언급 12 · P1 2</span>
+      </div>
+    </div>
+    <div class="rdept" onclick="selectReport('auto',this)" id="rd-auto">
+      <div class="rdept-name">🚗 자동차 다이렉트영업부</div>
+      <div class="rdept-score" style="color:var(--yellow)">44</div>
+      <div class="rdept-stats">
+        <span class="rdept-stat">미언급 6 · P1 1</span>
+      </div>
+    </div>
+    <div class="rdept" onclick="selectReport('rc',this)" id="rd-rc">
+      <div class="rdept-name">👤 RC파트</div>
+      <div class="rdept-score" style="color:var(--red)">12</div>
+      <div class="rdept-stats">
+        <span class="rdept-stat">미언급 3 · P1 0</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="reportDetail" style="display:none">
+    <div class="g2">
+      <div class="card">
+        <div class="card-title" id="rDetail-title">부서 상세</div>
+        <div id="rDetail-content"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">담당 인텐트 현황</div>
+        <div id="rDetail-intents"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ── AI 추천 인텐트 ──
+const AI_REC_DATA = [
+  {
+    rank:1,
+    query:'운전자보험이 뭐야? 꼭 필요해?',
+    reason:'월 9.3만 검색 · 전 플랫폼 미언급 · 정의형 콘텐츠 1개로 즉시 대응 가능 · 현대해상이 이 쿼리로 SOV 1위 유지 중',
+    vol:'9.3만',
+    dept:'콘텐츠기획',
+    deptKey:'content',
+    format:'정의형 페이지',
+    intent:'정보탐색',
+    urgency:'즉시'
+  },
+  {
+    rank:2,
+    query:'운전자보험 월 보험료 평균 얼마야',
+    reason:'월 7.2만 검색 · 미언급 · 연령대별 보험료 수치만 게시해도 인용 가능 · AI는 수치 데이터를 우선 인용',
+    vol:'7.2만',
+    dept:'장기다이렉트',
+    deptKey:'long',
+    format:'데이터 테이블',
+    intent:'가격',
+    urgency:'즉시'
+  },
+  {
+    rank:3,
+    query:'운전자보험 추천해줘',
+    reason:'월 18만 최대 볼륨 · 공동 관리 인텐트 · 4주 연속 미언급 · 정의+수치+비교 3개 노드가 동시에 완성되어야 인용',
+    vol:'18만',
+    dept:'공동 관리',
+    deptKey:'shared',
+    format:'FAQ + 비교표',
+    intent:'추천',
+    urgency:'긴급'
+  },
+  {
+    rank:4,
+    query:'운전자보험 온라인으로 바로 가입할 수 있어?',
+    reason:'월 6.4만 · 가입 직전 단계 · 랜딩페이지 GEO 최적화만으로 직접언급 전환 가능 · 전환 손실 최고 위험',
+    vol:'6.4만',
+    dept:'장기다이렉트',
+    deptKey:'long',
+    format:'가입 랜딩 최적화',
+    intent:'가입전환',
+    urgency:'긴급'
+  },
+  {
+    rank:5,
+    query:'현대해상 vs 삼성화재 운전자보험 비교',
+    reason:'월 6.1만 · 현재 4위 간접언급 · 보장 수치 비교표 1개로 1~2위 진입 가능 · 경쟁사 직접 비교라 AI 인용 높음',
+    vol:'6.1만',
+    dept:'장기다이렉트',
+    deptKey:'long',
+    format:'비교형 테이블',
+    intent:'비교',
+    urgency:'2주 내'
+  },
+  {
+    rank:6,
+    query:'비탑승 중 사고 보장 어떻게 되나요',
+    reason:'월 4.8만 · 미언급 · 삼성화재 실제 보장 있음에도 미노출 · 상품 페이지 구조화만으로 즉시 해결 가능',
+    vol:'4.8만',
+    dept:'장기다이렉트',
+    deptKey:'long',
+    format:'FAQ형 설명 페이지',
+    intent:'정보탐색',
+    urgency:'즉시'
+  }
+];
+
+let aiRecOpen = false;
+let aiRecLoaded = false;
+
+function toggleAiRec(headerEl) {
+  const body = document.getElementById('aiRecBody');
+  const toggle = document.getElementById('aiRecToggle');
+  aiRecOpen = !aiRecOpen;
+  body.classList.toggle('open', aiRecOpen);
+  toggle.classList.toggle('open', aiRecOpen);
+  if(aiRecOpen && !aiRecLoaded) loadAiRec();
+}
+
+function loadAiRec() {
+  const loading = document.getElementById('aiRecLoading');
+  const result = document.getElementById('aiRecResult');
+  const grid = document.getElementById('aiRecGrid');
+
+  // 실제 Claude API 연동 시 fetch('/api/geo-recommend') 로 교체
+  setTimeout(() => {
+    loading.style.display = 'none';
+    result.style.display = 'block';
+    grid.innerHTML = AI_REC_DATA.map(d => `
+      <div class="ai-rec-card">
+        <div class="arc-rank">
+          <div class="arc-rank-num">${d.rank}</div>
+          <span style="color:${d.urgency==='긴급'?'var(--red)':d.urgency==='즉시'?'var(--yellow)':'var(--t3)'};font-weight:700">${d.urgency}</span>
+        </div>
+        <div class="arc-query">${d.query}</div>
+        <div class="arc-reason">${d.reason}</div>
+        <div class="arc-meta">
+          <span class="arc-vol">🔥 월 ${d.vol}</span>
+          <span class="arc-dept">${d.dept}</span>
+          <span class="arc-format">${d.format}</span>
+        </div>
+        <button class="arc-add-btn" id="arcbtn-${d.rank}" onclick="addFromRec(${d.rank}, this)">
+          + 인텐트 목록에 추가
+        </button>
+      </div>
+    `).join('');
+    aiRecLoaded = true;
+  }, 1400);
+}
+
+function addFromRec(rank, btn) {
+  btn.textContent = '✓ 추가됨';
+  btn.classList.add('added');
+  btn.disabled = true;
+}
+
+// ── 직접 추가 ──
+const deptLabels = {long:'장기다이렉트',auto:'자동차다이렉트',content:'콘텐츠기획',brand:'브랜드전략',web:'홈페이지운영',rc:'RC파트'};
+
+function addCustomQuery() {
+  const input = document.getElementById('customQueryInput');
+  const dept = document.getElementById('customDept').value;
+  const intentVal = document.getElementById('customIntent').value;
+  const q = input.value.trim();
+  if(!q) return;
+
+  // 해당 인텐트 패널 찾아서 추가
+  const panel = document.querySelector(`.intent-panel[data-intent="${intentVal}"]`);
+  if(!panel) return;
+
+  const items = panel.querySelectorAll('.q-item');
+  const nextNum = items.length + 1;
+
+  const newItem = document.createElement('div');
+  newItem.className = 'q-item';
+  newItem.dataset.dept = dept;
+  newItem.innerHTML = `
+    <span class="q-num">${nextNum}</span>
+    <span class="q-text">${q} <span style="font-size:10px;background:#fef9c3;color:#854d0e;padding:1px 5px;border-radius:3px;margin-left:4px">직접 추가</span></span>
+    <span class="q-vol">측정 대기</span>
+    <span class="bdg gray">측정 대기</span>
+    <span style="color:var(--t3);font-size:12px">—</span>
+    <span class="q-dept" data-deptkey="${dept}">${deptLabels[dept]}</span>
+    <span class="mono" style="color:var(--t3);font-size:12px">—</span>
+  `;
+
+  // 헤더 다음에 삽입
+  const header = panel.querySelector('.q-header');
+  header.insertAdjacentElement('afterend', newItem);
+
+  input.value = '';
+  input.focus();
+
+  // 인텐트 탭으로 스크롤
+  panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+
+function switchTab(i, el) {
+  document.querySelectorAll('.page').forEach((p,idx) => p.classList.toggle('active', idx===i));
+  document.querySelectorAll('.tab').forEach((b,idx) => b.classList.toggle('active', idx===i));
+}
+
+// ── INTENT FILTER ──
+function filterIntent(type, el) {
+  document.querySelectorAll('#intentFilter .if-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.intent-panel').forEach(p => {
+    if(type==='all') p.classList.remove('hidden');
+    else p.classList.toggle('hidden', p.dataset.intent !== type);
+  });
+}
+
+// ── DEPT FILTER (인텐트 탭) ──
+function filterDept2(dept, el) {
+  document.querySelectorAll('#deptFilter2 .df-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.q-item').forEach(item => {
+    if(dept==='all') item.classList.remove('hidden');
+    else item.classList.toggle('hidden', item.dataset.dept !== dept);
+  });
+  // 공동 관리(추천) 는 항상 표시
+  if(dept !== 'all') {
+    document.querySelectorAll('.q-item .q-dept.shared').forEach(tag => {
+      tag.closest('.q-item').classList.remove('hidden');
+    });
+  }
+}
+
+// ── GLOBAL DEPT FILTER ──
+function filterByDept(val) {
+  // 인텐트 탭 부서 필터도 동기화
+  const btn = document.querySelector(`#deptFilter2 .df-btn[onclick*="${val}"]`);
+  if(btn) filterDept2(val, btn);
+}
+
+// ── REPORT ──
+const reportData = {
+  brand: {
+    title: '📣 브랜드전략파트',
+    score: 48,
+    node: '신뢰 노드',
+    intent: '신뢰확인',
+    issues: ['뉴스룸 Article Schema 미적용', '외부 권위 인용 2건 (경쟁사 대비 열세)', 'AI 긍정 감성 78/100 — 유지 필요'],
+    actions: ['Organization Schema 적용', 'Article Schema 뉴스룸 전면 적용', '보험연구원·금감원 인용 콘텐츠 확대'],
+    intents: [
+      {q:'삼성화재 믿을 만한 보험사야?', state:'직접 1위', score:78, vol:'4.2만'},
+      {q:'삼성화재 보험금 청구 얼마나 잘 해줘?', state:'직접 2위', score:65, vol:'3.1만'},
+      {q:'운전자보험 보험금 잘 안 줘서 유명한 회사', state:'모니터링', score:0, vol:'2.6만'},
+      {q:'국내 손해보험사 재무건전성 순위', state:'간접 2위', score:44, vol:'1.8만'},
+    ]
+  },
+  content: {
+    title: '✍️ 콘텐츠기획파트',
+    score: 31,
+    node: '정보 노드',
+    intent: '정보탐색 · 비교',
+    issues: ['FAQ형 콘텐츠 전무', '비교형 콘텐츠 전무', '정의형 콘텐츠 전무', 'FAQPage Schema 미적용'],
+    actions: ['보험 용어 정의 페이지 20개 구축', 'FAQ 구조화 콘텐츠 작성', '경쟁사 비교 콘텐츠 10개 이상'],
+    intents: [
+      {q:'운전자보험이 뭐야? 꼭 필요해?', state:'미언급', score:0, vol:'9.3만'},
+      {q:'운전자보험 면책 조항 뭐가 있어?', state:'미언급', score:0, vol:'2.4만'},
+      {q:'운전자보험 갱신형 vs 비갱신형 차이', state:'미언급', score:0, vol:'1.9만'},
+      {q:'운전자보험 보험료 결정 요인은?', state:'미언급', score:0, vol:'1.7만'},
+    ]
+  },
+  web: {
+    title: '🌐 홈페이지운영파트',
+    score: 22,
+    node: '기술 노드',
+    intent: '정보탐색 · 가입',
+    issues: ['Schema P1 오류 5건', 'llms.txt 미존재', 'AI 크롤러 허용 없음', 'sitemap 921일 미갱신', '모니모 앱 미러링 없음'],
+    actions: ['Schema.org 전면 수정 (InsuranceAgency)', 'llms.txt 구축', 'robots.txt AI 봇 허용', 'sitemap 자동 갱신 체계'],
+    intents: [
+      {q:'기술 구조 진단', state:'P1 5건', score:22, vol:'—'},
+      {q:'모니모 앱 크롤링', state:'불가', score:0, vol:'전체'},
+    ]
+  },
+  long: {
+    title: '🛡 장기 다이렉트영업부',
+    score: 18,
+    node: '운전자보험 노드',
+    intent: '추천 (공동) · 가격 · 비교',
+    issues: ['운전자보험 정의 페이지 없음', '보장 수치 데이터 미게시', '연령대별 보험료 표 없음', '비탑승 중 사고 설명 없음'],
+    actions: ['"운전자보험이란" 정의 페이지 구축', '연령대별 보험료 데이터 테이블 게시', '비탑승 중 사고 보장 상세 페이지', '경쟁사 보장 비교표 (수치 기반)'],
+    intents: [
+      {q:'운전자보험 추천해줘', state:'미언급', score:0, vol:'18만'},
+      {q:'비탑승 중 사고 보장 어떻게 되나요', state:'미언급', score:0, vol:'4.8만'},
+      {q:'운전자보험 월 보험료 평균 얼마야', state:'미언급', score:0, vol:'7.2만'},
+      {q:'현대해상 vs 삼성화재 운전자보험 비교', state:'간접 4위', score:29, vol:'6.1만'},
+    ]
+  },
+  auto: {
+    title: '🚗 자동차 다이렉트영업부',
+    score: 44,
+    node: '자동차보험 노드',
+    intent: '비교 · 가격 · 가입',
+    issues: ['상품 페이지 JS 의존 — AI 크롤링 불리', '회사별 보험료 비교 데이터 없음', 'JSON-LD 상품 구조화 없음'],
+    actions: ['상품 보장 JSON-LD 구조화', '다이렉트 vs 설계사 비교 콘텐츠', 'GEO 기준 랜딩페이지 재설계'],
+    intents: [
+      {q:'자동차보험 다이렉트 회사별 비교표', state:'간접 2위', score:51, vol:'5.4만'},
+      {q:'삼성화재 다이렉트 자동차보험 보장 범위', state:'직접 2위', score:63, vol:'2.2만'},
+      {q:'30대 남성 자동차보험 보험료 기준', state:'간접 3위', score:38, vol:'5.8만'},
+      {q:'자동차보험 보험료 낮추는 방법', state:'미언급', score:0, vol:'4.1만'},
+    ]
+  },
+  rc: {
+    title: '👤 RC파트',
+    score: 12,
+    node: '전환 노드',
+    intent: '가입/전환',
+    issues: ['RC 전문성 콘텐츠 없음', 'AI 연계 영업 자료 없음', '온·오프라인 메시지 단절'],
+    actions: ['AI 고객 질문 패턴 → RC 상담 자료 변환', 'GEO 콘텐츠 → RC 영업 자료 연계', '삼성화재 운전자보험 상담 랜딩 구축'],
+    intents: [
+      {q:'삼성화재 운전자보험 무료 상담 받는 방법', state:'미언급', score:0, vol:'0.7만'},
+      {q:'삼성화재 설계사 추천 받는 방법', state:'미언급', score:0, vol:'0.4만'},
+    ]
+  }
+};
+
+function goReport(dept) {
+  switchTab(3, document.querySelectorAll('.tab')[3]);
+  setTimeout(() => selectReport(dept, document.getElementById('rd-'+dept)), 100);
+}
+
+function selectReport(dept, el) {
+  document.querySelectorAll('.rdept').forEach(r => r.classList.remove('selected'));
+  el.classList.add('selected');
+
+  const d = reportData[dept];
+  document.getElementById('reportDetail').style.display = 'block';
+  document.getElementById('rDetail-title').textContent = d.title + ' · ' + d.node;
+
+  // 현황
+  let html = `
+    <div style="display:flex;gap:16px;margin-bottom:16px">
+      <div style="text-align:center;padding:12px 20px;background:var(--surface2);border-radius:8px;flex:1">
+        <div style="font-size:28px;font-weight:700;font-family:'DM Mono',monospace;color:${d.score<30?'var(--red)':d.score<50?'var(--yellow)':'var(--green)'}">${d.score}</div>
+        <div style="font-size:11px;color:var(--t3)">GEO 점수</div>
+      </div>
+      <div style="padding:12px 20px;background:var(--surface2);border-radius:8px;flex:2">
+        <div style="font-size:11px;color:var(--t3);margin-bottom:6px">담당 인텐트</div>
+        <div style="font-size:13px;font-weight:600;color:var(--blue)">${d.intent}</div>
+      </div>
+    </div>
+    <div style="margin-bottom:12px">
+      <div class="sec-title">현재 문제</div>
+      ${d.issues.map(i=>`<div style="display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px"><span style="color:var(--red);flex-shrink:0">✗</span>${i}</div>`).join('')}
+    </div>
+    <div>
+      <div class="sec-title">권고 액션</div>
+      ${d.actions.map(a=>`<div style="display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px"><span style="color:var(--green);flex-shrink:0">→</span>${a}</div>`).join('')}
+    </div>
+  `;
+  document.getElementById('rDetail-content').innerHTML = html;
+
+  // 인텐트
+  let ihtml = d.intents.map((item,i) => {
+    const stateColor = item.state.includes('미언급')||item.state.includes('불가') ? 'var(--red)' : item.state.includes('직접') ? 'var(--green)' : 'var(--yellow)';
+    const scoreColor = item.score===0 ? 'var(--red)' : item.score>50 ? 'var(--green)' : 'var(--yellow)';
+    return `
+      <div style="padding:10px 12px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 80px 60px 50px;gap:8px;align-items:center">
+        <div style="font-size:12px">${item.q}</div>
+        <span style="font-size:11px;color:${stateColor};font-weight:600">${item.state}</span>
+        <span style="font-size:11px;color:var(--t3);font-family:'DM Mono',monospace">${item.vol}</span>
+        <span style="font-size:12px;font-family:'DM Mono',monospace;color:${scoreColor};font-weight:700">${item.score||'—'}</span>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('rDetail-intents').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 80px 60px 50px;gap:8px;padding:6px 12px;background:var(--surface2);border-bottom:1px solid var(--border)">
+      <span style="font-size:10px;color:var(--t3)">질문</span>
+      <span style="font-size:10px;color:var(--t3)">언급 상태</span>
+      <span style="font-size:10px;color:var(--t3)">월 검색량</span>
+      <span style="font-size:10px;color:var(--t3)">점수</span>
+    </div>
+    ${ihtml}
+  `;
+}
+</script>
+</body>
+</html>
