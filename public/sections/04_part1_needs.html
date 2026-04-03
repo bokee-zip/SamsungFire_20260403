@@ -1,50 +1,78 @@
 <!-- Content Slide Part 1 -->
 <section id="needs" class="bg-white">
-  <div class="container">
-    <div class="mb-l animate-in">
-      <span class="badge mb-xs">Needs Analysis</span>
-      <h2 class="h1-text mb-s">채널별 GEO 도입 니즈 분석</h2>
+  <div class="container" style="max-height: 100%; overflow-y: hidden; display: flex; flex-direction: column;">
+    <div class="mb-m animate-in flex-shrink-0">
+      <span class="badge mb-xs">Situation</span>
+      <h2 class="h1-text mb-xs">삼성화재가 직면한 상황</h2>
     </div>
 
-    <!-- Replacing traditional grids with a slightly more dense 3x2 grid of cards -->
-    <div class="grid-3 mb-l animate-in">
-      
-      <div class="card" style="border: 1.5px solid var(--samsung-blue); padding: 32px;">
-        <span class="badge sub mb-xs" style="background: rgba(0, 104, 255, 0.1); color: var(--samsung-blue); font-size: 14px;">대표 홈페이지</span>
-        <h4 class="h3-text mb-s" style="font-size: 22px;">홈페이지운영파트</h4>
-        <p class="body-regular" style="font-size: 18px; line-height: 1.6;">AI가 삼성화재 공식 정보를 신뢰할 수 있는 정보원으로 인식하도록 구조화된 데이터와 콘텐츠 체계 구축</p>
-      </div>
-
-      <div class="card" style="border: 1.5px solid var(--good-blue); padding: 32px;">
-        <span class="badge sub mb-xs" style="background: rgba(0, 183, 253, 0.1); color: var(--good-blue); font-size: 14px;">자동차 다이렉트</span>
-        <h4 class="h3-text mb-s" style="font-size: 22px;">자동차다이렉트영업부</h4>
-        <p class="body-regular" style="font-size: 18px; line-height: 1.6;">"자동차보험 추천" AI 질문에 삼성화재가 1순위로 인용되도록 상품 비교 데이터 및 차별점 콘텐츠 최적화</p>
-      </div>
-
-      <div class="card" style="border: 1.5px solid var(--mint-green); padding: 32px;">
-        <span class="badge sub mb-xs" style="background: rgba(0, 209, 134, 0.1); color: var(--mint-green); font-size: 14px;">장기 다이렉트</span>
-        <h4 class="h3-text mb-s" style="font-size: 22px;">장기다이렉트영업부</h4>
-        <p class="body-regular" style="font-size: 18px; line-height: 1.6;">운전자보험, 건강보험 관련 AI 검색에서 실제 보상 사례 기반의 신뢰도 높은 정보원 확보</p>
-      </div>
-
-      <div class="card" style="border: 1.5px solid var(--coral-orange); padding: 32px;">
-        <span class="badge sub mb-xs" style="background: rgba(255, 148, 69, 0.1); color: var(--coral-orange); font-size: 14px;">브랜드 콘텐츠</span>
-        <h4 class="h3-text mb-s" style="font-size: 22px;">콘텐츠기획파트</h4>
-        <p class="body-regular" style="font-size: 18px; line-height: 1.6;">블로그/SNS 콘텐츠를 AI가 인용할 수 있는 구조화된 FAQ, 용어집, 비교표로 전환</p>
-      </div>
-
-      <div class="card" style="border: 1.5px solid var(--gold-yellow); padding: 32px;">
-        <span class="badge sub mb-xs" style="background: rgba(255, 192, 0, 0.1); color: #B38600; font-size: 14px;">상품 정보</span>
-        <h4 class="h3-text mb-s" style="font-size: 22px;">자동차/장기 상품파트</h4>
-        <p class="body-regular" style="font-size: 18px; line-height: 1.6;">상품별 차별점을 AI가 이해할 수 있는 형태로 정리 (JSON-LD, Schema.org 마크업 적용)</p>
-      </div>
-
-      <div class="card" style="border: 1.5px solid var(--charcoal-gray); padding: 32px;">
-        <span class="badge sub mb-xs" style="background: rgba(44, 44, 44, 0.1); color: var(--charcoal-gray); font-size: 14px;">전사 브랜드</span>
-        <h4 class="h3-text mb-s" style="font-size: 22px;">브랜드전략파트</h4>
-        <p class="body-regular" style="font-size: 18px; line-height: 1.6;">전사 브랜드 메시지가 AI 답변에서 일관되게 전달되도록 통합 브랜드 보이스 가이드라인 수립</p>
-      </div>
-
+    <!-- Table Layout for Needs -->
+    <div class="card animate-in mb-m" style="border: 1.5px solid var(--light-gray); padding: 0; overflow: hidden; border-radius: 16px; flex-shrink: 0;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead style="background: var(--light-blue); border-bottom: 2px solid var(--samsung-blue);">
+          <tr>
+            <th style="padding: 16px 24px; font-weight: 600; color: var(--dark-navy);">채널</th>
+            <th style="padding: 16px 24px; font-weight: 600; color: var(--dark-navy);">현재 역할</th>
+            <th style="padding: 16px 24px; font-weight: 600; color: var(--dark-navy);">GEO 도입 니즈</th>
+            <th style="padding: 16px 24px; font-weight: 600; color: var(--dark-navy);">담당 부서</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid var(--bg-gray);">
+            <td style="padding: 16px 24px; font-weight: 500; font-size: 16px;">공식 홈페이지</td>
+            <td style="padding: 16px 24px; font-size: 16px;">상품 정보 제공</td>
+            <td style="padding: 16px 24px; font-size: 16px;">AI 크롤링 가능 구조 전환</td>
+            <td style="padding: 16px 24px; font-size: 16px; color: var(--medium-gray);">홈페이지운영파트</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--bg-gray);">
+            <td style="padding: 16px 24px; font-weight: 500; font-size: 16px;">모니모 앱</td>
+            <td style="padding: 16px 24px; font-size: 16px;">가입·조회 기능 통합</td>
+            <td style="padding: 16px 24px; font-size: 16px;">앱 전용 → AI 사각지대 해소</td>
+            <td style="padding: 16px 24px; font-size: 16px; color: var(--medium-gray);">홈페이지운영파트</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--bg-gray);">
+            <td style="padding: 16px 24px; font-weight: 500; font-size: 16px;">블로그·SNS</td>
+            <td style="padding: 16px 24px; font-size: 16px;">채널 기획·제작 운영</td>
+            <td style="padding: 16px 24px; font-size: 16px;">AI 인용 가능 구조화 콘텐츠</td>
+            <td style="padding: 16px 24px; font-size: 16px; color: var(--medium-gray);">콘텐츠기획파트</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--bg-gray);">
+            <td style="padding: 16px 24px; font-weight: 500; font-size: 16px;">다이렉트 자동차보험</td>
+            <td style="padding: 16px 24px; font-size: 16px;">마케팅·광고 집행</td>
+            <td style="padding: 16px 24px; font-size: 16px;">GEO 기준 랜딩페이지 재설계</td>
+            <td style="padding: 16px 24px; font-size: 16px; color: var(--medium-gray);">자동차다이렉트영업부</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--bg-gray);">
+            <td style="padding: 16px 24px; font-weight: 500; font-size: 16px;">다이렉트 운전자보험</td>
+            <td style="padding: 16px 24px; font-size: 16px;">마케팅·광고 집행</td>
+            <td style="padding: 16px 24px; font-size: 16px;">운전자보험 지식 노드 구축</td>
+            <td style="padding: 16px 24px; font-size: 16px; color: var(--medium-gray);">장기다이렉트영업부</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--bg-gray);">
+            <td style="padding: 16px 24px; font-weight: 500; font-size: 16px;">RC 대면 채널</td>
+            <td style="padding: 16px 24px; font-size: 16px;">설계사 조직 운영·지원</td>
+            <td style="padding: 16px 24px; font-size: 16px;">AI 질문 패턴 → RC 상담 연계</td>
+            <td style="padding: 16px 24px; font-size: 16px; color: var(--medium-gray);">개인영업지원파트(RC)</td>
+          </tr>
+          <tr>
+            <td style="padding: 16px 24px; font-weight: 500; font-size: 16px;">뉴스룸·보도자료</td>
+            <td style="padding: 16px 24px; font-size: 16px;">브랜드 체계 및 SNS 운영</td>
+            <td style="padding: 16px 24px; font-size: 16px;">브랜드 엔티티 + Article Schema</td>
+            <td style="padding: 16px 24px; font-size: 16px; color: var(--medium-gray);">브랜드전략파트</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+
+    <!-- Core Diagnosis Box -->
+    <div class="card animate-in flex-shrink-0" style="border: 2px solid var(--alert-red); padding: 32px; border-radius: 16px; background: #FFF5F5;">
+      <h3 class="h3-text mb-xs" style="color: var(--alert-red); font-size: 20px;">핵심 진단</h3>
+      <ul style="list-style: none; padding-left: 0;">
+        <li class="body-regular mb-xs" style="font-size: 18px; color: var(--dark-navy);">• 지금 AI에게 "운전자보험 추천해줘"라고 물으면 삼성화재는 나오지 않습니다</li>
+        <li class="body-regular mb-xs" style="font-size: 18px; color: var(--dark-navy);">• 콘텐츠가 없는 게 아닙니다. AI가 읽을 수 있는 형태가 없는 것입니다</li>
+        <li class="body-regular" style="font-size: 18px; color: var(--dark-navy); font-weight: 500;">• 이건 마케팅 문제가 아니라 조직이 정보를 구조화하는 방식의 문제입니다</li>
+      </ul>
+    </div>
+
   </div>
 </section>

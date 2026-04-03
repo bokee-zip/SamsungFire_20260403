@@ -1,18 +1,63 @@
 <!-- Content Slide Part 3 (Live Demo) -->
 <section id="live-demo" class="bg-white">
-  <div class="container">
-    <div class="mb-s animate-in text-center">
-      <span class="badge mint mb-xs">Live Demo</span>
-      <h2 class="h1-text mb-xs">MARS GEO 레시피북</h2>
-      <p class="body-large">GEO 최적화를 위한 자체 개발 에이전트 도구입니다. 실제 작동 화면을 시연합니다.</p>
+  <div class="container" style="max-height: 100%; overflow-y: hidden; display: flex; flex-direction: column;">
+    <div class="mb-s animate-in flex-shrink-0">
+      <span class="badge mint mb-xs">MARS</span>
+      <h2 class="h1-text mb-xs">Multi Agent Recipe System</h2>
+      <p class="body-regular">MARS는 여러 AI 에이전트가 순서대로 역할을 수행하며 GEO 분석부터 콘텐츠 생성까지 자동화하는 시스템입니다.</p>
     </div>
 
-    <!-- Placeholder for Live Demo -->
-    <a href="https://pm-agent-poc.vercel.app/" target="_blank" style="text-decoration: none; display: block;" class="animate-in">
-      <div class="card bg-bg-gray text-center" style="min-height: 400px; display: flex; align-items: center; justify-content: center; border: 2px dashed rgba(0, 104, 255, 0.3); cursor: pointer;">
+    <!-- Table Layout -->
+    <div class="card animate-in mb-m" style="border: 1.5px solid var(--light-gray); padding: 0; overflow: hidden; border-radius: 16px; flex-shrink: 0;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead style="background: var(--light-blue); border-bottom: 2px solid var(--samsung-blue);">
+          <tr>
+            <th style="padding: 12px 24px; font-weight: 600; color: var(--dark-navy);">에이전트</th>
+            <th style="padding: 12px 24px; font-weight: 600; color: var(--dark-navy);">역할</th>
+            <th style="padding: 12px 24px; font-weight: 600; color: var(--dark-navy);">출력</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid var(--bg-gray);">
+            <td style="padding: 12px 24px; font-weight: 600; font-size: 15px;">크롤링 에이전트</td>
+            <td style="padding: 12px 24px; font-size: 15px;">삼성화재 및 경쟁사 사이트 구조 수집</td>
+            <td style="padding: 12px 24px; font-size: 15px;">Schema, robots.txt, sitemap 분석</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--bg-gray);">
+            <td style="padding: 12px 24px; font-weight: 600; font-size: 15px;">AI 가시성 에이전트</td>
+            <td style="padding: 12px 24px; font-size: 15px;">ChatGPT/Perplexity/Claude/Gemini 응답 수집</td>
+            <td style="padding: 12px 24px; font-size: 15px;">쿼리별 언급 여부·순위·감성</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--bg-gray);">
+            <td style="padding: 12px 24px; font-weight: 600; font-size: 15px;">SOV 분석 에이전트</td>
+            <td style="padding: 12px 24px; font-size: 15px;">경쟁사 대비 Share of Voice 산출</td>
+            <td style="padding: 12px 24px; font-size: 15px;">보험사별 AI 언급 점유율</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--bg-gray);">
+            <td style="padding: 12px 24px; font-weight: 600; font-size: 15px;">기술 진단 에이전트</td>
+            <td style="padding: 12px 24px; font-size: 15px;">GEO 기술 체크리스트 17개 자동 점검</td>
+            <td style="padding: 12px 24px; font-size: 15px;">P1/P2/P3 이슈 및 조치 권고</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 24px; font-weight: 600; font-size: 15px;">레포트 에이전트</td>
+            <td style="padding: 12px 24px; font-size: 15px;">전사·부서별 GEO 성과 통합 레포트 생성</td>
+            <td style="padding: 12px 24px; font-size: 15px;">기획실 경영진 보고용 자료</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Live Demo Box -->
+    <a href="https://pm-agent-poc.vercel.app/" target="_blank" style="text-decoration: none; display: flex; flex: 1; flex-shrink: 0;" class="animate-in">
+      <div class="card bg-bg-gray text-center" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px dashed var(--mint-green); cursor: pointer;">
         <div>
-          <h3 class="h2-text mb-xs" style="color: var(--samsung-blue);">[MARS GEO 레시피북 라이브 시연]</h3>
-          <p class="body-regular" style="color: var(--charcoal-gray);">이 자리에서 실제 화면을 라이브로 시연합니다<br><span style="font-size: 14px; opacity: 0.6; margin-top: 8px; display: inline-block;">(클릭 시 시연 페이지 새 창 열기)</span></p>
+          <h3 class="h2-text mb-xs" style="color: var(--mint-green);">지금 시연에서 확인할 내용</h3>
+          <ul style="list-style: none; padding-left: 0; text-align: left; display: inline-block;">
+            <li class="body-regular mb-xs" style="font-size: 16px; color: var(--charcoal-gray);">• 삼성화재 다이렉트 홈페이지 실제 기술 진단 결과 (Schema 오류, sitemap 921일 미갱신 등)</li>
+            <li class="body-regular mb-xs" style="font-size: 16px; color: var(--charcoal-gray);">• "운전자보험 추천해줘" 쿼리에서 삼성화재가 실제로 어떻게 보이는지</li>
+            <li class="body-regular mb-xs" style="font-size: 16px; color: var(--charcoal-gray);">• 경쟁사 대비 SOV — 삼성화재 11% vs 현대해상 84%</li>
+            <li class="body-regular" style="font-size: 16px; color: var(--charcoal-gray);">• 인텐트별 미언급 쿼리 현황 — 월 검색량 9.3만인데 전 플랫폼 미언급</li>
+          </ul>
         </div>
       </div>
     </a>
